@@ -2,6 +2,17 @@
 
 #include "../alloc.hpp"
 
+/*
+ * class relationship:
+ *  1. allocator: cpp standard allocator, using sgi-alloc as underlying allocator
+ *  2. simple_alloc: call alloc's func, turn sizeof(T) to bytes
+ *  3. allocAdaptor: adaptor turns sgi-alloc to standard allocator
+ *  4. alloc_traits: encapualute the difference among std/sgi/allocAdaptor 
+ * 
+ * 
+ * 
+ */
+
 namespace MiniSTL {
 
 #ifdef USE_MALLOC
@@ -96,10 +107,12 @@ public:
     static T* allocate(size_t sz) { 
         return 0 == sz ? 
                 0 : (T*) Alloc_t::allocate(sz * sizeof(T));
-        }
+    }
+
     static T* allocate(void) { 
         return (T*) Alloc_t::allocate(sizeof(T)); 
     }
+
     static void deallocate(T* p, size_t sz) { 
         if(0 != sz) {
             Alloc_t::deallocate(p, sz * sizeof(T)); 
@@ -107,7 +120,7 @@ public:
     }
 
     static void deallocate(T* p) { 
-        Alloc_t::deallocate(p, sizeof (T));
+        Alloc_t::deallocate(p, sizeof(T));
     }
 };
 
@@ -204,9 +217,7 @@ inline bool operator!=(const allocAdaptor<T, Alloc_t>& a1,
 // This adaptor uses partial specialization.  The general case of
 // alloc_traits<T, Alloc_t> assumes that Alloc_t is a
 // standard-conforming allocator, possibly with non-equal instances
-// and non-static members.  (It still behaves correctly even if Alloc_t
-// has static member and if all instances are equal.  Refinements
-// affect performance, not correctness.)
+// and non-static members.
 
 // There are always two members: allocator_type, which is a standard-
 // conforming allocator type for allocating objects of type T, and
