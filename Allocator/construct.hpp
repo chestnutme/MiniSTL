@@ -2,6 +2,7 @@
 
 #include <new>
 #include "../Traits/typeTraits.hpp"
+#include "../Iterator/iterator.hpp"
 
 namespace MiniSTL {
 
@@ -17,12 +18,7 @@ inline void destroy(T* p) {
 
 template <class ForwardIterator>
 inline void destory(ForwardIterator first, ForwardIterator last) {
-    __destory(first, last, value_type(first));
-}
-
-template <class ForwardIterator, class T>
-inline void __destory(ForwardIterator first, ForwardIterator last, T*) {
-    using has_trivial_destructor = typename type_traits<T>::has_trivial_destructor;
+    using has_trivial_destructor = typename type_traits<value_type(first)>::has_trivial_constructor;
     __destory_aux(first, last, has_trivial_destructor());
 }
 
