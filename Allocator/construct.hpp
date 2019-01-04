@@ -36,4 +36,4 @@ inline void __destory_aux(ForwardIterator first, ForwardIterator last, false_typ
     }
 }
 
-};
+} // MiniSTL

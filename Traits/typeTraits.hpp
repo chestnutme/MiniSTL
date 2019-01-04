@@ -21,6 +21,8 @@ attain their correct values by one of these means:
 */
 
 namespace MiniSTL {
+
+
 // not like bool value(true/false), the following two types can be 
 // used in type deduction then function overloading, which is in compile-time.
 struct true_type {};
@@ -276,4 +278,4 @@ struct is_iterger<unsigned long long> {
     using integral = true_type;
 };
 
-};
+} // MiniSTL
