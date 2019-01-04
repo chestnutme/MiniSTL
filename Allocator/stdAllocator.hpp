@@ -2,6 +2,8 @@
 
 #include "../alloc.hpp"
 
+namespace MiniSTL {
+
 #ifdef USE_MALLOC
 using alloc_t = malloc_alloc;
 #else
@@ -270,3 +272,5 @@ struct alloc_traits<T, allocAdaptor<U, default_alloc>> {
     using alloc_type = simple_alloc<T, default_alloc>;
     using allocator_type = allocAdaptor<T, default_alloc>;
 };
+
+} // MiniSTL
