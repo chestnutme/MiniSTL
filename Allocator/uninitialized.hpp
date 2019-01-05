@@ -5,6 +5,7 @@
 #include "../Traits/typeTraits.hpp"
 #include "../Iterator/iterator.hpp"
 #include "../Algorithms/algobase.hpp"
+#include "../Util/pair.hpp"
 
 namespace MiniSTL {
 
@@ -48,8 +49,8 @@ uninitialized_copy_n(InputIter first, Size n, ForwardIter res) {
 }
 
 template <class InputIter, class Size, class ForwardIter>
-pair<_InputIter, _ForwardIter>
-inline ForwardIter __uninitialized_copy_n_aux(InputIter first, Size n, ForwardIter res, input_iterator_tag) {
+inline pair<InputIter, ForwardIter>
+__uninitialized_copy_n_aux(InputIter first, Size n, ForwardIter res, input_iterator_tag) {
     ForwardIter cur = res;
     for(;n > 0;--n, ++first, ++cur) {
         construct(&*cur, *first);
@@ -58,8 +59,8 @@ inline ForwardIter __uninitialized_copy_n_aux(InputIter first, Size n, ForwardIt
 }
 
 template <class RandomAccessIter, class Size, class ForwardIter>
-pair<_InputIter, _ForwardIter>
-inline ForwardIter __uninitialized_copy_n_aux(RandomAcessIter first, Size n, ForwardIter res, random_access_iterator_tag) {
+inline pair<InputIter, ForwardIter>
+__uninitialized_copy_n_aux(RandomAccessIter first, Size n, ForwardIter res, random_access_iterator_tag) {
     RandomAccessItee last = first + n;
     return pair<RandomAccessIter, ForwardIter>(last, 
                 uninitialized_copy(first, last, res));
