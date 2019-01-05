@@ -40,6 +40,24 @@ struct type_traits {
     using is_POD_type = false_type;
 };
 
+//alias template
+template <class T>
+using has_trivial_default_constructor = type_traits<T>::has_trivial_copy_constructor;
+
+template <class T> 
+using has_trivial_copy_constructor = type_traits<T>::has_trivial_copy_constructor;
+
+template <class T>
+using has_trivial_assignment_operator = type_traits<T>::has_trivial_assignment_operator;
+
+template <class T>
+using has_trivial_destructor = type_traits<T>::has_trivial_destructor;
+
+template <class T>
+using is_POD_type = type_traits<T>::is_POD_type;
+
+
+
 template <>
 struct type_traits<bool> {
     using has_trivial_default_constructor = true_type;
