@@ -59,9 +59,9 @@ __uninitialized_copy_n_aux(InputIter first, Size n, ForwardIter res, input_itera
 }
 
 template <class RandomAccessIter, class Size, class ForwardIter>
-inline pair<InputIter, ForwardIter>
+inline pair<RandomAccessIter, ForwardIter>
 __uninitialized_copy_n_aux(RandomAccessIter first, Size n, ForwardIter res, random_access_iterator_tag) {
-    RandomAccessItee last = first + n;
+    RandomAccessIter last = first + n;
     return pair<RandomAccessIter, ForwardIter>(last, 
                 uninitialized_copy(first, last, res));
 }
