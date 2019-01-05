@@ -2,8 +2,8 @@
 
 #include <cstring>
 #include "construct.hpp"
-#include "../Traits/typeTraits.hpp"
-#include "../Iterator/iterator.hpp"
+#include "../Traits/type_traits.hpp"
+#include "../Iterator/iterator_base.hpp"
 #include "../Algorithms/algobase.hpp"
 #include "../Util/pair.hpp"
 
@@ -12,8 +12,7 @@ namespace MiniSTL {
 // copy [first, last) into [res, res + last - first)
 template <class InputIter, class ForwardIter>
 inline ForwardIter uninitialized_copy(InputIter first, InputIter last, ForwardIter res) {
-    using is_POD_type = typename type_traits<value_type(first)>::is_POD_type;
-    return __uninitialized_copy_aux(first, last, res, is_POD_type());
+    return __uninitialized_copy_aux(first, last, res, is_POD_type<value_type<ForwardIter> >());
 }
 
 template <class InputIter, class ForwardIter>
@@ -45,7 +44,7 @@ template <class InputIter, class Size, class ForwardIter>
 inline pair<InputIter, ForwardIter> 
 uninitialized_copy_n(InputIter first, Size n, ForwardIter res) {
     return __uninitialized_copy_n_aux(first, n, res, 
-                iterator_category(first));
+                iterator_category<ForwardIter>());
 }
 
 template <class InputIter, class Size, class ForwardIter>
@@ -70,8 +69,7 @@ __uninitialized_copy_n_aux(RandomAccessIter first, Size n, ForwardIter res, rand
 // fill [first, last) with x
 template <class ForwardIter, class T>
 inline void uninitialized_fill(ForwardIter first, ForwardIter last, const T& x) {
-    using is_POD_type = typename type_traits<value_type(first)>::is_POD_type;
-    __uninitialized_fill_aux(first, last, x, is_POD_type());
+    __uninitialized_fill_aux(first, last, x, is_POD_type<value_type<ForwardIter> >());
 }
 
 template <class ForwardIter, class T>
@@ -90,8 +88,7 @@ inline void __uninitialized_fill_aux(ForwardIter first, ForwardIter last, const 
 // fill [first, first + n) with x
 template <class ForwardIter, class Size, class T>
 inline ForwardIter uninitialized_fill_n(ForwardIter first, Size n, const T& x) {
-    using is_POD_type = typename type_traits<value_type(first)>::is_POD_type;
-    return __uninitialized_fill_n_aux(first, n, x, is_POD_type());
+    return __uninitialized_fill_n_aux(first, n, x, is_POD_type<value_type<ForwardIter> >());
 }
 
 template <class ForwardIter, class Size, class T>

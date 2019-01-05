@@ -106,7 +106,7 @@ inline bool operator!=(const malloc_alloc&,
 //      due to size info without permanentyly losing part of the object.
 class default_alloc {
 private:
-    enum  freelist_setting{
+    enum freelist_setting{
 	    ALIGN = 8,
         MAX_BYTES = 128, 
         NFREELISTS = MAX_BYTES / ALIGN
@@ -152,7 +152,7 @@ public:
 
 char* default_alloc::start_free = nullptr;
 char* default_alloc::end_free = nullptr;
-size_t heap_size = 0;
+size_t default_alloc::heap_size = 0;
 default_alloc::obj* volatile 
 default_alloc::freelist[NFREELISTS] = {
     nullptr, nullptr, nullptr, nullptr,
