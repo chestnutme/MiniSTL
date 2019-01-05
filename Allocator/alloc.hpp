@@ -90,7 +90,6 @@ inline bool operator==(const malloc_alloc&,
   return true;
 }
 
-template
 inline bool operator!=(const malloc_alloc&,
                        const malloc_alloc&)
 {

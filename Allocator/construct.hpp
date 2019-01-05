@@ -21,10 +21,10 @@ inline void destory(ForwardIterator first, ForwardIterator last) {
     __destory_aux(first, last, has_trivial_destructor<value_type<ForwardIterator> >());
 }
 
-template <class ForwardIterator, class T>
+template <class ForwardIterator>
 inline void __destory_aux(ForwardIterator first, ForwardIterator last, true_type) {}
 
-template <class ForwardIterator, class T>
+template <class ForwardIterator>
 inline void __destory_aux(ForwardIterator first, ForwardIterator last, false_type) {
     for(;first != last;first++) {
         destory(&*first); // typeof(first) != T
