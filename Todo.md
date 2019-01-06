@@ -20,6 +20,8 @@
     - [ ] algobase.hpp
     - [ ] head.hpp
     - [ ] algo_set.hpp
+    - [ ] sort.hpp
+    - [ ] numeric.hpp
 
 - [ ] Container
     - [ ] Sequence
@@ -38,6 +40,10 @@
         - [ ] map_hpp
         - [ ] multiset.hpp
         - [ ] multimap.hpp
+
+- [ ] Function:
+    - [ ] function_base.hpp
+    - [ ] function_adaptor.hpp
   
  - [ ] Util
     - [x] pair.hpp: just like std::pair 
