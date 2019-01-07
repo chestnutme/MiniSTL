@@ -44,6 +44,7 @@
 - [ ] Function:
     - [ ] function_base.hpp
     - [ ] function_adaptor.hpp
+    - [ ] function.hpp
   
  - [ ] Util
     - [x] pair.hpp: just like std::pair 
