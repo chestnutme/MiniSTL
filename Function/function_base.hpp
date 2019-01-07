@@ -239,4 +239,63 @@ public:
     substractive_rng() { initialized(161803398u); }
 };
 
+// costant function: return a constant value
+template <class Result>
+struct constant_void_fun {
+    using argument_type = void;
+    using result_type = Result;
+
+    Result res;
+
+    constant_void_fun(const result_type& v) : res(v) {}
+
+    const result_type& operator()() const { return res; }
+};  
+
+template <class Result, class Arg = Result>
+struct constant_unary_fun {
+    using argument_type = Arg;
+    using result_type = result;
+
+    Result res;
+
+    constant_unary_fun(const result_type& v) : res(v) {}
+
+    const result_type& operator()(const Arg&) const { return res; }
+};
+
+template <class Result, class Arg1 = Result, class Arg2 = Result>
+struct constant_binary_fun {
+    using first_argument_type = Arg1;
+    using second_argument_type = Arg2;
+    using result_type = Result;
+
+    Result res;
+
+    constant_binary_fun(const Result& v) : res(v) {}
+
+    const result_type& operator()(const Arg1&, const Arg2&) const {
+        return res;
+    }
+};
+
+template <class Result>
+inline constant_void_fun<Result> constant0(const Result& val)
+{
+  return constant_void_fun<Result>(val);
+}
+
+template <class Result, class Arg>
+inline constant_unary_fun<Result, Arg> constant1(const Result& val)
+{
+  return constant_unary_fun<Result, Arg>(val);
+}
+
+template <class Result, class Arg1, class Arg2>
+inline constant_binary_fun<Result, Arg1, Arg2> 
+constant2(const Result& val)
+{
+  return constant_binary_fun<Result, Arg1, Arg2>(val);
+}
+
 } // MiniSTL
