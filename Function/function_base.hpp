@@ -16,6 +16,9 @@
 
 #include <cstddef>
 
+namespace MiniSTL {
+
+
 // base class of all unary func, binary func
 template <class Arg, class Result>
 struct unary_function {
@@ -235,3 +238,5 @@ public:
     substractive_rng(unsigned int seed) { initialized(seed); }
     substractive_rng() { initialized(161803398u); }
 };
+
+} // MiniSTL

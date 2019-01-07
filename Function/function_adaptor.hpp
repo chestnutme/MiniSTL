@@ -2,6 +2,9 @@
 
 #include "function_base.hpp"
 
+namespace MiniSTL {
+
+
 // turn predicate to its negate form
 template <class Predicate>
 struct unary_negate
@@ -193,3 +196,5 @@ pointer_to_binary_function<Arg1, Arg2, Result>
 ptr_func(Result (*f)(Arg1, Arg2)) {
     return pointer_to_binary_function<Arg1, Arg2, Result>(x);
 }
+
+} // MiniSTL
