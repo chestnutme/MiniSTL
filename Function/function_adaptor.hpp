@@ -197,4 +197,158 @@ ptr_func(Result (*f)(Arg1, Arg2)) {
     return pointer_to_binary_function<Arg1, Arg2, Result>(x);
 }
 
+// Adaptor function: pointer to member function
+// There are a total of 8 = 2^3 function objects in this family.
+//      1. Member func taking no arguments vs taking one argument
+//      2. Call throught pointer vs call through reference
+//      3. Const vs non-const member function
+// helper function mem_fun and mem_fun_ref can build the above
+// function adaptor quickly.
+// pointer to member function usually is declared as follows:
+// class T {
+//      int f() { return 7; }
+//      int (A::*pf)();
+//      A() : pf(&T::f);
+//}
+
+// no argument, through pointer
+template <class Ret, class T>
+class mem_fun_t : public unary_function<T*, Ret> {
+private:
+    Ret (T::*func)();
+
+public:
+    explicit mem_fun_t(Ret (T::*f)()) : func(f) {}
+    Ret operator()(T* t) const { return (t->*f)(); }
+};
+
+template <class Ret, class T>
+inline mem_fun_t<Ret, T> mem_fun(Ret (T::*f)()) {
+    return mem_fun_t<Ret, T>(f);
+}
+
+// no argument, through const pointer
+template <class Ret, class T>
+class const_mem_fun_t : public unary_function<const T*, Ret> {
+private:
+    Ret (T::*func)() const;
+
+public:
+    explicit const_mem_fun_t(Ret (T::*f)() const) : func(f) {}
+    Ret operator()(const T* t) const { return (t->*f)(); }
+};
+
+template <class Ret, class T>
+inline const_mem_fun_t<Ret, T> mem_fun(Ret (T::*f)() const) {
+    return const_mem_fun_t<Ret, T>(f);
+}
+
+// no argument, through ref
+template <class Ret, class T>
+class mem_fun_ref_t : public unary_function<T, Ret> {
+private:
+    Ret (T::*func)();
+
+public:
+    explicit mem_fun_t(Ret (T::*f)()) : func(f) {}
+    Ret operator()(T& t) const { return (t.*f)(); }
+};
+
+template <class Ret, class T>
+inline mem_fun_ref_t<Ret, T> mem_fun_ref(Ret (T::*f)()) {
+    return mem_fun_ref_t<Ret, T>(f);
+}
+
+// no argument, through const ref
+template <class Ret, class T>
+class const_mem_fun_ref_t : public unary_function<T, Ret> {
+private:
+    Ret (T::*func)() const;
+
+public:
+    explicit const_mem_fun_ref_t(Ret (T::*f)() const) 
+        : func(f) {}
+    Ret operator()(const T& t) const { return (t.*f)(); }
+};
+
+template <class Ret, class T>
+inline const_mem_fun_ref_t<Ret, T> mem_fun_ref(Ret (T::*f)() const) {
+    return const_mem_fun_ref_t<Ret, T>(f);
+}
+
+// one argument, through pointer
+template<class Ret, class T, class Arg>
+class mem_fun1_t : public binary_function<T*, Arg, Ret> {
+private:
+    Ret (T::*func)(Arg);
+
+public:
+    explicit mem_fun1_t(Ret (T::*f)(Arg)) : func(f) {}
+    Ret operator()(T* t, Arg x) const {
+        return (t->*func)(x);
+    }
+};
+
+template<class Ret, class T, class Arg>
+mem_fun1_t<Ret, T, Arg> mem_fun1(Ret (T::*f)(Arg)) {
+    return mem_fun1_t<Ret, T, Arg>(f);
+}
+
+// one argument, through const pointer
+template<class Ret, class T, class Arg>
+class const_mem_fun1_t : public binary_function<const T*, Arg, Ret> {
+private:
+    Ret (T::*func)(Arg) const;
+
+public:
+    explicit const_mem_fun1_t(Ret (T::*f)(Arg) const) 
+        : func(f) {}
+    Ret operator()(const T* t, Arg x) const {
+        return (t->*func)(x);
+    }
+};
+
+template<class Ret, class T, class Arg>
+const_mem_fun1_t<Ret, T, Arg> mem_fun1(Ret (T::*f)(Arg) const) {
+    return const_mem_fun1_t<Ret, T, Arg>(f);
+}
+
+// one argument, through ref
+template<class Ret, class T, class Arg>
+class mem_fun1_ref_t : public binary_function<T, Arg, Ret> {
+private:
+    Ret (T::*func)(Arg);
+
+public:
+    explicit mem_fun1_ref_t(Ret (T::*f)(Arg)) : func(f) {}
+    Ret operator()(T& t, Arg x) const {
+        return (t.*func)(x);
+    }
+};
+
+template<class Ret, class T, class Arg>
+mem_fun1_ref_t<Ret, T, Arg> mem_fun1(Ret (T::*f)(Arg)) {
+    return mem_fun1_ref_t<Ret, T, Arg>(f);
+}
+
+// one argument, through const ref
+template<class Ret, class T, class Arg>
+class const_mem_fun1_ref_t : public binary_function<T*, Arg, Ret> {
+private:
+    Ret (T::*func)(Arg) const;
+
+public:
+    explicit const_rmem_fun1_ref_t(Ret (T::*f)(Arg) const) 
+        : func(f) {}
+    Ret operato()(const T& t, Arg x) const {
+        return (t.*func)(x);
+    }
+};
+
+template<class Ret, class T, class Arg>
+const_mem_fun1_ref_t<Ret, T, Arg> 
+mem_fun1(Ret (T::*f)(Arg) const) {
+    return const_mem_fun1_ref_t<Ret, T, Arg>(f);
+}
+
 } // MiniSTL
