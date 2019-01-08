@@ -19,7 +19,7 @@
 
 - [ ] Algorithms
     - [ ] algobase.hpp
-    - [ ] head.hpp
+    - [ ] heap.hpp
     - [ ] algo_set.hpp
     - [ ] sort.hpp
     - [ ] numeric.hpp
