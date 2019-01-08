@@ -6,6 +6,7 @@
     - [x] little_Alloc.hpp: a little exercising alloc learning from <STL source code analysis>, not used
     - [x] construct.hpp: construct and destory
     - [x] unintialized.hpp: uninitialized_copy(), unitialized fill()
+    - [x] smart_pointer.hpp: RAII, auto_ptr, not used
     - [x] memory.hpp: include above 
   
 - [x] Traits
@@ -41,10 +42,10 @@
         - [ ] multiset.hpp
         - [ ] multimap.hpp
 
-- [ ] Function:
-    - [ ] function_base.hpp
-    - [ ] function_adaptor.hpp
-    - [ ] function.hpp
+- [x] Function:
+    - [x] function_base.hpp
+    - [x] function_adaptor.hpp
+    - [x] function.hpp
   
  - [ ] Util
     - [x] pair.hpp: just like std::pair 
