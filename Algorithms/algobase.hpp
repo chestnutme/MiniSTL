@@ -1,6 +1,7 @@
 #pragma once
 
-#include <cstddef>
+#include <cstddef> // ptrdiff_t
+#include <cstring> // memmove, memcmp
 #include "../Iterator/iterator_base.hpp"
 
 
@@ -255,6 +256,116 @@ template <class Size>
 inline char* fill_n(char* first, Size n, const char& c) {
   fill(first, first + n, c);
   return first + n;
+}
+
+//--------------------------------------------------
+// equal and mismatch
+
+template <class InputIt1, class InputIt2>
+pair<InputIt1, InputIt2> mismatch(InputIt1 first1, InputIt1 last1,
+                                    InputIt2 first2) {
+    while (first1 != last1 && *first1 == *first2) {
+        ++first1;
+        ++first2;
+    }
+    return pair<InputIt1, InputIt2>(first1, first2);
+}
+
+template <class InputIt1, class InputIt2, class BiPredicate>
+pair<InputIt1, InputIt2> mismatch(InputIt1 first1, InputIt1 last1,
+                                    InputIt2 first2, BiPredicate pred) {
+    while (first1 != last1 && pred(*first1, *first2)) {
+        ++first1;
+        ++first2;
+    }
+    return pair<InputIt1, InputIt2>(first1, first2);
+}
+
+template <class InputIt1, class InputIt2>
+inline bool equal(InputIt1 first1, InputIt1 last1, InputIt2 first2) {
+    for ( ; first1 != last1; ++first1, ++first2)
+        if (*first1 != *first2)
+        return false;
+    return true;
+}
+
+template <class InputIt1, class InputIt2, class BiPredicate>
+inline bool equal(InputIt1 first1, InputIt1 last1,
+                  InputIt2 first2, BiPredicate pred) {
+    for ( ; first1 != last1; ++first1, ++first2)
+        if (!pred(*first1, *first2))
+        return false;
+    return true;
+}
+
+//--------------------------------------------------
+// lexicographical_compare and lexicographical_compare_3way.
+
+template <class InputIt1, class InputIt2>
+bool lexicographical_compare(InputIt1 first1, InputIt1 last1,
+                             InputIt2 first2, InputIt2 last2) {
+    for (;first1 != last1 && first2 != last2;++first1, ++first2) {
+        if (*first1 < *first2)
+            return true;
+        if (*first2 < *first1)
+            return false;   
+    }
+    return first1 == last1 && first2 != last2;
+}
+
+template <class InputIt1, class InputIt2, class Compare>
+bool lexicographical_compare(InputIt1 first1, InputIt1 last1,
+                             InputIt2 first2, InputIt2 last2,
+                             Compare comp) {
+    for (;first1 != last1 && first2 != last2;++first1, ++first2) {
+        if (comp(*first1, *first2))
+            return true;    
+        if (comp(*first2, *first1))
+            return false;
+    }
+    return first1 == last1 && first2 != last2;
+}
+
+inline bool 
+lexicographical_compare(const unsigned char* first1,
+                        const unsigned char* last1,
+                        const unsigned char* first2,
+                        const unsigned char* last2) {
+    const size_t len1 = last1 - first1;
+    const size_t len2 = last2 - first2;
+    const int res = memcmp(first1, first2, min(len1, len2));
+    return res != 0 ? res < 0 : len1 < len2;
+}
+
+
+template <class InputIt1, class InputIt2>
+int lexicographical_compare_3way(InputIt1 first1, InputIt1 last1,
+                                   InputIt2 first2, InputIt2 last2) {
+    while (first1 != last1 && first2 != last2) {
+        if (*first1 < *first2)
+            return -1;
+        if (*first2 < *first1)
+            return 1;
+        ++first1;
+        ++first2;
+    }
+    if (first2 == last2) {
+        return first1 == last1 ? 0 : 1;
+    }
+    else {
+        return -1;
+    }
+}
+
+inline int
+lexicographical_compare_3way(const unsigned char* first1,
+                             const unsigned char* last1,
+                             const unsigned char* first2,
+                             const unsigned char* last2) {
+    const ptrdiff_t len1 = last1 - first1;
+    const ptrdiff_t len2 = last2 - first2;
+    const int res = memcmp(first1, first2, min(len1, len2));
+    return res != 0 ? res : (len1 == len2 ? 0 : (len1 < len2 ? -1 : 1));
 }
 
 } // MiniSTL
