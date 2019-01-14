@@ -90,7 +90,7 @@ OutputIt set_difference(InputIt1 first1, InputIt1 last1,
             ++first1;
             ++result;
         }
-        else if (*first2 < *first1)
+        else if (comp(*first2, *first1)
             ++first2;
         else {
             ++first1;
@@ -128,7 +128,7 @@ set_symmetric_difference(InputIt1 first1, InputIt1 last1,
 }
 
 template <class InputIt1, class InputIt2, class OutputIt, 
-          class Equal = equal_to<value_type<InputIt1>> >
+          class Equal = equal_to<value_type<InputIt1>>>
 OutputIt
 set_cartesian_product(InputIt1 first1, InputIt1 last1,
                       InputIt2 first2, InputIt2 last2,
@@ -159,7 +159,7 @@ template <class InputIt1, class InputIt2,
           class Equal = equal_to<value_type<InputIt1>> >
 bool bag_includes(InputIt1 first1, InputIt1 last1,
                   InputIt2 first2, InputIt2 last2,
-                  Compare comp = Compare()
+                  Compare comp = Compare(),
                   Equal equal = Equal()) {
     while (first1 != last1 && first2 != last2) {
         if (comp(*first2, *first1))
@@ -183,13 +183,11 @@ bool bag_includes(InputIt1 first1, InputIt1 last1,
 // for bag, union means that bag A has the same element x n times,
 // B has x m times, result has x max(n, m) times
 template <class InputIt1, class InputIt2, class OutputIt,
-          class Compare = less<value_type<InputIt1>>,
-          class Equal = equal_to<value_type<InputIt1>> >
+          class Compare = less<value_type<InputIt1>> >
 OutputIt bag_union(InputIt1 first1, InputIt1 last1,
                    InputIt2 first2, InputIt2 last2,
                    OutputIt result,
-                   Compare comp = Compare(),
-                   Equal equal = Equal()) {
+                   Compare comp = Compare()) {
     while (first1 != last1 && first2 != last2) {
         if (comp(*first1,*first2)) {
             *result = *first1;
@@ -200,13 +198,9 @@ OutputIt bag_union(InputIt1 first1, InputIt1 last1,
             ++first2;
         }
         else {
-            while(equal(*first2, *(++first2)) && first2 != last2 &&
-                  equal(*first1, *(++first1)) && first1 != last1)
-                  *result = *first1;
-            while(equal(*first1, *(++first1)) && first1 != last1) {
-                *result = *first1;
-            while(equal(*first2, *(++first2)) && first2 != last2)
-                *result = *first1;
+            *result = *first1;
+            ++first1;
+            ++first2;
         }
         ++result;
     }
@@ -216,13 +210,11 @@ OutputIt bag_union(InputIt1 first1, InputIt1 last1,
 // for bag, intersection means that bag A has the same element x n times,
 // B has x m times, result has x min(n, m) times;
 template <class InputIt1, class InputIt2, class OutputIt,
-          class Compare = less<value_type<InputIt1>>, 
-          class Equal = equal_to<value_type<InputIt1>> >
+          class Compare = less<value_type<InputIt1>> >
 OutputIt bag_intersection(InputIt1 first1, InputIt1 last1,
                           InputIt2 first2, InputIt2 last2,
                           OutputIt result,
-                          Compare comp = Compare()
-                          Equal equal = Equal()) {
+                          Compare comp = Compare()) {
     while (first1 != last1 && first2 != last2) {
         if (comp(*first1, *first2)) 
             ++first1;
@@ -242,20 +234,18 @@ OutputIt bag_intersection(InputIt1 first1, InputIt1 last1,
 // for bag, includes means that bag A has the same element x n times,
 // B has x m times, result has x max(n - m , 0) times
 template <class InputIt1, class InputIt2, class OutputIt,
-          class Compare = less<value_type<InputIt1>>,
-          class Equal = equal_to<value_type<InputIt1>> >
-OutputIt set_difference(InputIt1 first1, InputIt1 last1,
+          class Compare = less<value_type<InputIt1>> >
+OutputIt bag_difference(InputIt1 first1, InputIt1 last1,
                         InputIt2 first2, InputIt2 last2,
                         OutputIt result,
-                        Compare comp = Compare()
-                        Equal equal = Equal()) {
+                        Compare comp = Compare()) {
     while (first1 != last1 && first2 != last2) {
         if (comp(*first1, *first2)) {
             *result = *first1;
             ++first1;
             ++result;
         }
-        else if (*first2 < *first1)
+        else if (comp(*first2, *first1))
             ++first2;
         else {
             ++first1;
@@ -267,14 +257,12 @@ OutputIt set_difference(InputIt1 first1, InputIt1 last1,
 
 
 template <class InputIt1, class InputIt2, class OutputIt,
-          class Compare = less<value_type<InputIt1>>,
-          class Equal = equal_to<value_type<InputIt1>> >
+          class Compare = less<value_type<InputIt1>> >
 OutputIt 
 set_symmetric_difference(InputIt1 first1, InputIt1 last1,
                          InputIt2 first2, InputIt2 last2,
                          OutputIt result,
-                         Compare comp = Compare(),
-                         Equal equal = Equal()) {
+                         Compare comp = Compare()) {
     while (first1 != last1 && first2 != last2) {
         if (comp(*first1, *first2)) {
             *result = *first1;
@@ -292,24 +280,6 @@ set_symmetric_difference(InputIt1 first1, InputIt1 last1,
         }
     }
     return copy(first2, last2, copy(first1, last1, result));
-}
-
-template <class InputIt1, class InputIt2, class OutputIt, 
-          class Equal = equal_to<value_type<InputIt1>> >
-OutputIt
-bag_cartesian_product(InputIt1 first1, InputIt1 last1,
-                      InputIt2 first2, InputIt2 last2,
-                      OutputIt result,
-                      Equal equal = Equal()) {
-    while(first1 != last1) {
-        while(first2 != last2) {
-            *result = make_pair(*first1, first2);
-            while(equal(*first2, *(++first2)) && first2 != last2);
-            ++result;
-        }
-        while(equal(*first1, *(++first1)) && first1 != last1);
-    }
-    return result;
 }
 
 } // MiniSTL
