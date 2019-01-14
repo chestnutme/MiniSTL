@@ -2,6 +2,7 @@
 
 #include "../Iterator/iterator_base.hpp"
 #include "../Function/function_base.hpp"
+#include "../Util/pair.hpp"
 #include "algobase.hpp"
 
 namespace MiniSTL {
@@ -125,5 +126,24 @@ set_symmetric_difference(InputIt1 first1, InputIt1 last1,
     }
     return copy(first2, last2, copy(first1, last1, result));
 }
+
+template <class InputIt1, class InputIt2, class OutputIt, 
+          class Equal = equal_to<value_type<InputIt1>> >
+OutputIt
+set_cartesian_product(InputIt1 first1, InputIt1 last1,
+                      InputIt2 first2, InputIt2 last2,
+                      OutputIt result,
+                      Equal equal = Equal()) {
+    while(first1 != last1) {
+        while(first2 != last2) {
+            *result = make_pair(*first1, first2);
+            while(equal(*first2, *(++first2)) && first2 != last2);
+            ++result;
+        }
+        while(equal(*first1, *(++first1)) && first1 != last1);
+    }
+    return result;
+}
+
 
 } // MiniSTL
