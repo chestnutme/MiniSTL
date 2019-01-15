@@ -184,102 +184,29 @@ bool bag_includes(InputIt1 first1, InputIt1 last1,
 // B has x m times, result has x max(n, m) times
 template <class InputIt1, class InputIt2, class OutputIt,
           class Compare = less<value_type<InputIt1>> >
-OutputIt bag_union(InputIt1 first1, InputIt1 last1,
-                   InputIt2 first2, InputIt2 last2,
-                   OutputIt result,
-                   Compare comp = Compare()) {
-    while (first1 != last1 && first2 != last2) {
-        if (comp(*first1,*first2)) {
-            *result = *first1;
-            ++first1;
-        }
-        else if (comp(*first2, *first1)) {
-            *result = *first2;
-            ++first2;
-        }
-        else {
-            *result = *first1;
-            ++first1;
-            ++first2;
-        }
-        ++result;
-    }
-    return copy(first2, last2, copy(first1, last1, result));
-}
+using bag_union = set_union<InputIt1, InputIt2, OutputIt, Compare>;
+
 
 // for bag, intersection means that bag A has the same element x n times,
 // B has x m times, result has x min(n, m) times;
 template <class InputIt1, class InputIt2, class OutputIt,
           class Compare = less<value_type<InputIt1>> >
-OutputIt bag_intersection(InputIt1 first1, InputIt1 last1,
-                          InputIt2 first2, InputIt2 last2,
-                          OutputIt result,
-                          Compare comp = Compare()) {
-    while (first1 != last1 && first2 != last2) {
-        if (comp(*first1, *first2)) 
-            ++first1;
-        else if (comp(*first2, *first1)) 
-            ++first2;
-        else {  
-            *result = *first1;
-            ++first1;
-            ++first2;
-            ++result;
-        }
-    }
-    return result;
-}
+using bag_intersection = set_intersection<InputIt1, InputIt2, 
+                                          OutputIt, Compare>;
 
-// set_difference: return [first1, last1) - [first2 - last2)
+// bag_difference: return [first1, last1) - [first2 - last2)
 // for bag, includes means that bag A has the same element x n times,
 // B has x m times, result has x max(n - m , 0) times
 template <class InputIt1, class InputIt2, class OutputIt,
           class Compare = less<value_type<InputIt1>> >
-OutputIt bag_difference(InputIt1 first1, InputIt1 last1,
-                        InputIt2 first2, InputIt2 last2,
-                        OutputIt result,
-                        Compare comp = Compare()) {
-    while (first1 != last1 && first2 != last2) {
-        if (comp(*first1, *first2)) {
-            *result = *first1;
-            ++first1;
-            ++result;
-        }
-        else if (comp(*first2, *first1))
-            ++first2;
-        else {
-            ++first1;
-            ++first2;
-        }
-    }
-    return copy(first1, last1, result);
-}
+using bag_difference = set_difference<InputIt1, InputIt2,
+                                      OutputIt, Compare>;
 
 
 template <class InputIt1, class InputIt2, class OutputIt,
           class Compare = less<value_type<InputIt1>> >
-OutputIt 
-set_symmetric_difference(InputIt1 first1, InputIt1 last1,
-                         InputIt2 first2, InputIt2 last2,
-                         OutputIt result,
-                         Compare comp = Compare()) {
-    while (first1 != last1 && first2 != last2) {
-        if (comp(*first1, *first2)) {
-            *result = *first1;
-            ++first1;
-            ++result;
-        }
-        else if (comp(*first2, *first1)) {
-            *result = *first2;
-            ++first2;
-            ++result;
-        }
-        else {
-            ++first1;
-            ++first2;
-        }
-    }
-    return copy(first2, last2, copy(first1, last1, result));
-}
+using bag_symmetric_difference = 
+            set_symmetric_difference<InputIt1, InputIt2,
+                                     OutputIt, Compare>;
 
 } // MiniSTL
