@@ -53,7 +53,11 @@ adjacent_difference(InputIt first, InputIt last, OutputIt result,
     return ++result;
 }
 
-// quick 
+// quick power algo
+// power number x = (1 * 2**m + 0 * 2**(m-1) + ...) * 2**k
+// eg: 13 ** 20 = 13 ** ((1 * 2**2 + 0 * 2**1 + 1 * 2**0) * 2**2)
+//              = ((13 ** 2) ** 2) * (1 * 2**2 + 1 * 2**0)
+//              = ((13 ** 2) ** 2) * ((((13 ** 2) ** 2) ** 2) **2)
 template <class T, class Integer, class MonoidOp = multiplies<T>>
 inline T power(T x, Integer n , MonoidOp op = MonoidOp()) {
     if(n == 0) {
