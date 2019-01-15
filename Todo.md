@@ -18,11 +18,11 @@
           input/output stream iterator
 
 - [ ] Algorithms
-    - [ ] algobase.hpp
+    - [x] algobase.hpp
     - [x] heap.hpp
-    - [ ] algo_set.hpp
+    - [x] algo_set.hpp
     - [ ] sort.hpp
-    - [ ] numeric.hpp
+    - [x] numeric.hpp 
 
 - [ ] Container
     - [ ] Sequence
