@@ -116,24 +116,31 @@ RandomIt is_heap_until(RandomIt first, RandomIt last,
     if(last - first < 2) return first;
     Distance parent = Distance(0);
     Distance len = Distance(last - first);
-    // check the subtree with left and right
-    while(parent < (len - 2) / 2) {
-        Distance left = parent * 2 + 1;
-        if(comp(*(first + parent), *(first + child))) 
-            return first + child - 1;
-        child++;
+    // // check the subtree with left and right
+    // while(parent < (len - 2) / 2) {
+    //     Distance left = parent * 2 + 1;
+    //     if(comp(*(first + parent), *(first + child))) 
+    //         return first + child - 1;
+    //     child++;
+    //     if(comp(*(first + parent), *(first + child)))
+    //         return first + child - 1;
+    // }
+    // // check the last left
+    // Distance child = parent * 2 + 1;
+    // if(comp(*(first + parent), *(first + child))) 
+    //         return first + child - 1;
+    // // if has the last right, check
+    // if(parent * 2 + 2 < len) {
+    //     child++;
+    //     if(comp(*(first + parent), *(first + child))) 
+    //         return first + child - 1;
+    // }
+    // return last;
+    for(Distance child = 1;child < len;child++) {
         if(comp(*(first + parent), *(first + child)))
             return first + child - 1;
-    }
-    // check the last left
-    Distance child = parent * 2 + 1;
-    if(comp(*(first + parent), *(first + child))) 
-            return first + child - 1;
-    // if has the last right, check
-    if(parent * 2 + 2 < len) {
-        child++;
-        if(comp(*(first + parent), *(first + child))) 
-            return first + child - 1;
+        if((child & 1) == 0))
+            ++parent;
     }
     return last;
 }
