@@ -14,7 +14,7 @@ namespace MiniSTL {
 
 // use standard-conforming allocator that has no alloc member
 // so use static class function
-template <class T, class Allocator = simple_alloc<T, default_alloc>>
+template <class T, class Allocator = simple_alloc<T>>
 class vector {
 public:
     using value_type = T；

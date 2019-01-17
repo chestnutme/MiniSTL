@@ -101,7 +101,7 @@ inline bool operator!=(const allocator<T1>&, const allocator<T2>&)
 }
 
 
-template<class T, class Alloc_t>
+template<class T, class Alloc_t = alloc_t>
 class simple_alloc {
 public:
     static T* allocate(size_t sz) { 
