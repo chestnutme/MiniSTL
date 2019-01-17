@@ -227,72 +227,72 @@ struct type_traits<T*> {
 
 
 template <class T>
-struct is_iterger {
+struct is_integer {
     using integral = false_type;
 };
 
 template <>
-struct is_iterger<bool> {
+struct is_integer<bool> {
     using integral = true_type;
 };
 
 template <>
-struct is_iterger<char> {
+struct is_integer<char> {
     using integral = true_type;
 };
 
 template <>
-struct is_iterger<signed char> {
+struct is_integer<signed char> {
     using integral = true_type;
 };
 
 template <>
-struct is_iterger<unsigned char> {
+struct is_integer<unsigned char> {
     using integral = true_type;
 };
 
 template <>
-struct is_iterger<wchar_t> {
+struct is_integer<wchar_t> {
     using integral = true_type;
 };
 
 template <>
-struct is_iterger<short> {
+struct is_integer<short> {
     using integral = true_type;
 };
 
 template <>
-struct is_iterger<unsigned short> {
+struct is_integer<unsigned short> {
     using integral = true_type;
 };
 
 template <>
-struct is_iterger<int> {
+struct is_integer<int> {
     using integral = true_type;
 };
 
 template <>
-struct is_iterger<unsigned int> {
+struct is_integer<unsigned int> {
     using integral = true_type;
 };
 
 template <>
-struct is_iterger<long> {
+struct is_integer<long> {
     using integral = true_type;
 };
 
 template <>
-struct is_iterger<unsigned long> {
+struct is_integer<unsigned long> {
     using integral = true_type;
 };
 
 template <>
-struct is_iterger<long long> {
+struct is_integer<long long> {
     using integral = true_type;
 };
 
 template <>
-struct is_iterger<unsigned long long> {
+struct is_integer<unsigned long long> {
     using integral = true_type;
 };
 

@@ -8,6 +8,7 @@
 #include <cstdint> // for SIZE_MAX
 #include <initializer_list>
 #include <utility>
+#include <exception>
 
 
 namespace MiniSTL {
@@ -60,7 +61,7 @@ public:
 
     template <class InputIt>
     vector(InputIt first, InputIt last) {
-        initialize_aux(first, last, is_iterger<InputIt>());
+        initialize_aux(first, last, is_integer<InputIt>());
     }
     
     vector(vector&& other) noexcept {
@@ -141,7 +142,7 @@ public:
 
     template <class InputIt>
     void assign(InputIt first, InputIt last) {
-        assign_dispatch(first, last, is_iterger<InputIt>());
+        assign_dispatch(first, last, is_integer<InputIt>());
     }
 
     void assign(std::initializer_list<T> ilist) {
@@ -339,7 +340,7 @@ public:
 
     template <class InputIt>
     iterator insert(const_iterator pos, InputIt first, InputIt last) {
-        insert_dispatch(pos, first, last, is_iterger<InputIt>());
+        insert_dispatch(pos, first, last, is_integer<InputIt>());
     }
     
     iterator insert(const_iterator pos, T&& val) {
