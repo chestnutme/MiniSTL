@@ -1,7 +1,7 @@
 #pragma once
 
-#include "../Iterator/iterator_base.hpp"
-#include "../Function/function_base.hpp"
+#include "Iterator/iterator_base.hpp"
+#include "Function/function_base.hpp"
 
 namespace MiniSTL {
 

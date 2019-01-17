@@ -2,10 +2,10 @@
 
 #include <cstring>
 #include "construct.hpp"
-#include "../Traits/type_traits.hpp"
-#include "../Iterator/iterator_base.hpp"
-#include "../Algorithms/algobase.hpp"
-#include "../Util/pair.hpp"
+#include "Traits/type_traits.hpp"
+#include "Iterator/iterator_base.hpp"
+#include "Algorithms/algobase.hpp"
+#include "Util/pair.hpp"
 
 namespace MiniSTL {
 

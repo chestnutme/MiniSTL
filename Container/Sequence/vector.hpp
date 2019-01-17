@@ -1,9 +1,9 @@
 #pragma once
 
-#include "../Allocator/memory.hpp"
-#include "../Iterator/iterator.hpp"
-#include "../Algorithms/algobase.hpp"
-#include "../Traits/type_traits.hpp"
+#include "Allocator/memory.hpp"
+#include "Iterator/iterator.hpp"
+#include "Algorithms/algobase.hpp"
+#include "Traits/type_traits.hpp"
 
 #include <cstdint> // for SIZE_MAX
 #include <initializer_list>

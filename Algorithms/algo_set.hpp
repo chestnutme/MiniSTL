@@ -1,8 +1,8 @@
 #pragma once
 
-#include "../Iterator/iterator_base.hpp"
-#include "../Function/function_base.hpp"
-#include "../Util/pair.hpp"
+#include "Iterator/iterator_base.hpp"
+#include "Function/function_base.hpp"
+#include "Util/pair.hpp"
 #include "algobase.hpp"
 
 namespace MiniSTL {

@@ -1,8 +1,8 @@
 #pragma once
 
 #include <new>
-#include "../Traits/type_traits.hpp"
-#include "../Iterator/iterator_base.hpp"
+#include "Traits/type_traits.hpp"
+#include "Iterator/iterator_base.hpp"
 
 namespace MiniSTL {
 
