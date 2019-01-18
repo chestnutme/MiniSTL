@@ -251,7 +251,7 @@ public:
     template <class... Args> 
     iterator emplace(const_iterator pos, Args&&... args) {
         // construct(pos, T(args...));
-        new (pos) T(args);
+        new (pos) T(args...);
         return pos;
     }
     
@@ -293,7 +293,7 @@ public:
     void emplace_back(Args&&... args) {
         if(finish != end_of_storage) {
             // construct(finish, T(args...));
-            new (finish) T(std::forward(val));
+            new (finish) T(args...);
             ++finish;
         } else {
             insert_aux(finish, std::move(T(args...)));
