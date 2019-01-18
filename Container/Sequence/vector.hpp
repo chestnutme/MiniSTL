@@ -251,7 +251,7 @@ public:
     template <class... Args> 
     iterator emplace(const_iterator pos, Args&&... args) {
         // construct(pos, T(args...));
-        new (pos) T(args...);
+        new (static_cast<void*>(pos)) T(args...);
         return pos;
     }
     
@@ -282,7 +282,7 @@ public:
     void push_back(T&& val) {
         if(finish != end_of_storage) {
             // construct(finish, val);
-            new (finish) T(std::forward(val));
+            new (static_cast<void*>(finish)) T(std::forward(val));
             ++finish;
         } else {
             insert_aux(finish, std::forward(val));
@@ -293,7 +293,7 @@ public:
     void emplace_back(Args&&... args) {
         if(finish != end_of_storage) {
             // construct(finish, T(args...));
-            new (finish) T(args...);
+            new (static_cast<void*>(finish)) T(args...);
             ++finish;
         } else {
             insert_aux(finish, std::move(T(args...)));
@@ -560,7 +560,7 @@ void vector<T, Alloc>::insert_aux(iterator pos, T&& val) {
         try {
             new_finish = uninitialized_copy(start, pos, new_start);
             // construct(new_finish, val);
-            new (new_finish) T(std::forward(val));
+            new (static_cast<void*>(new_finish)) T(std::forward(val));
             ++new_finish;
             new_finish = uninitialized_copy(pos, finish, new_finish);
         } catch(std::exception&) {
