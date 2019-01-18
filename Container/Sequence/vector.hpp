@@ -317,9 +317,9 @@ public:
     }
 
     void swap(vector& x) {
-        swap(start, x.start);
-        swap(finish, x.finish);
-        swap(end_of_storage, x.end_of_storage);
+        MiniSTL::swap(start, x.start);
+        MiniSTL::swap(finish, x.finish);
+        MiniSTL::swap(end_of_storage, x.end_of_storage);
     }
 
 public:
