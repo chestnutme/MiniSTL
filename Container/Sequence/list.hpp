@@ -87,9 +87,9 @@ public:
     using allocator_type = Allocator;
 
 protected:
-    using node_alloc = simple_alloc<list_node>;
-    using node = list_node<T>;
-    node* dummy;
+    using node_alloc = simple_alloc<list_node<T>>;
+    using node_t = list_node<T>;
+    node_t* dummy;
 
     void initialize() {
         dummy = get_node();
@@ -234,7 +234,7 @@ public:
     }
 
     size_type max_size() const noexcept {
-        return SIZE_MAX / sizeof(list_node<T>);
+        return SIZE_MAX / sizeof(node_t);
     }
 
     void resize(size_type new_sz) {
@@ -500,8 +500,8 @@ void list<T, Alloc>::resize(size_type new_sz, const T& val) {
 template <class T, class Alloc>
 typename list<T, Alloc>::iterator
 list<T, Alloc>::erase(const_iterator pos) {
-    list_node* prev = pos.node->prev;
-    list_node* next = pos.node->next;
+    node_t* prev = pos.node->prev;
+    node_t* next = pos.node->next;
     prev->next = next;
     next->prev = prev;
     destory(&pos.node->data);
@@ -519,9 +519,9 @@ list<T, Alloc>::erase(const_iterator first, const_iterator last) {
 
 template <class T, class Alloc>
 void list<T, Alloc>::clear() {
-    list_node* cur = dummy->next;
+    node_t* cur = dummy->next;
     while(cur != dummy) {
-        list_node* tmp = cur;
+        node_t* tmp = cur;
         cur = cur->next;
         destory(&tmp->data);
         put_node(cur);
@@ -532,7 +532,7 @@ void list<T, Alloc>::clear() {
 template <class T, class Alloc>
 typename list<T, Alloc>::iterator 
 list<T, Alloc>::insert(const_iterator pos, const T& val) {
-    list_node* tmp = create_node(val);
+    node_t* tmp = create_node(val);
     tmp->next = pos.node;
     tmp->prev = pos.node->prev;
     pos.node->prev = tmp;
@@ -543,7 +543,7 @@ list<T, Alloc>::insert(const_iterator pos, const T& val) {
 template <class T, class Alloc>
 typename list<T, Alloc>::iterator 
 list<T, Alloc>::insert(const_iterator pos, T&& val) {
-    list_node* tmp = create_node(std::forward(val));
+    node_t* tmp = create_node(std::forward(val));
     tmp->next = pos.node;
     tmp->prev = pos.node->prev;
     pos.node->prev = tmp;
@@ -579,7 +579,7 @@ template <class T, class Alloc>
 void list<T, Alloc>::transfer(iterator pos, iterator first, iterator last) {
     if (pos != last) {
         // Remove [first, last) from its old position.
-        list_node* tmp = last.node->prev;
+        node_t* tmp = last.node->prev;
         first.node->prev->next = last.node;
         last.node->prev = first.node->prev;
 
@@ -803,7 +803,7 @@ void list<T, Alloc>::sort(Compare comp) {
  
 template <class T, class Alloc>
 void list<T, Alloc>::reverse() noexcept {
-    list_node* tmp = dummy;
+    node_t* tmp = dummy;
     do {
         MiniSTL::swap(tmp->prev, tmp->next);
         tmp = tmp->prev;
