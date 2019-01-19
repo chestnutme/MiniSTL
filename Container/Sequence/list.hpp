@@ -97,12 +97,12 @@ protected:
         dummy->next = dummy;
     }
 
-    node* get_node() { return node_allocator::allocate(); }
+    node_t* get_node() { return node_alloc::allocate(1); }
 
-	void put_node(node* p) { node_allocator::deallocate(p); }
+	void put_node(node_t* p) { node_alloc::deallocate(p); }
 
-	node* create_node(const T& val) {
-        node* p = get_node();
+	node_t* create_node(const T& val) {
+        node_t* p = get_node();
         try {
             construct(p->data, val);
         } catch(std::exception&) {
@@ -111,8 +111,8 @@ protected:
         return p;
     } 
 
-    node* create_node(T&& val)  {
-        node* p = get_node();
+    node_t* create_node(T&& val)  {
+        node_t* p = get_node();
         try {
             new (&p->data) T(std::forward(val));
         } catch(std::exception&) {
