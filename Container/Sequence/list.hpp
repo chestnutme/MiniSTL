@@ -36,7 +36,7 @@ struct list_iterator {
     node_t* node;
 
     list_iterator() {}
-    list_iterator(node* x) : node(x) {}
+    list_iterator(node_t* x) : node(x) {}
     list_iterator(const iterator& x) : node(x.node) {}
 
     reference operator*() const { return node->data; }
@@ -518,7 +518,7 @@ list<T, Alloc>::erase(const_iterator first, const_iterator last) {
 }
 
 template <class T, class Alloc>
-void list<T, Alloc>::clear() {
+void list<T, Alloc>::clear() noexcept {
     node_t* cur = dummy->next;
     while(cur != dummy) {
         node_t* tmp = cur;
