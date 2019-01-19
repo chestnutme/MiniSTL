@@ -17,17 +17,17 @@ inline void destroy(T* p) {
 }
 
 template <class ForwardIterator>
-inline void destory(ForwardIterator first, ForwardIterator last) {
-    __destory_aux(first, last, has_trivial_destructor<value_type<ForwardIterator> >());
+inline void destroy(ForwardIterator first, ForwardIterator last) {
+    __destroy_aux(first, last, has_trivial_destructor<value_type<ForwardIterator> >());
 }
 
 template <class ForwardIterator>
-inline void __destory_aux(ForwardIterator first, ForwardIterator last, true_type) {}
+inline void __destroy_aux(ForwardIterator first, ForwardIterator last, true_type) {}
 
 template <class ForwardIterator>
-inline void __destory_aux(ForwardIterator first, ForwardIterator last, false_type) {
+inline void __destroy_aux(ForwardIterator first, ForwardIterator last, false_type) {
     for(;first != last;first++) {
-        destory(&*first); // typeof(first) != T
+        destroy(&*first); // typeof(first) != T
     }
 }
 

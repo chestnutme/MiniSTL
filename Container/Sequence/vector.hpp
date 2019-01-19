@@ -77,7 +77,7 @@ public:
     }
 
     ~vector() {
-        destory_and_deallocate();
+        destroy_and_deallocate();
     }
 
 
@@ -102,8 +102,8 @@ protected:
         return result;
     }
 
-    void destory_and_deallocate() noexcept {
-        destory(start, end_of_storage);
+    void destroy_and_deallocate() noexcept {
+        destroy(start, end_of_storage);
         alloc::deallocate(start, end_of_storage - start);
     }
 
@@ -259,13 +259,13 @@ public:
         if(pos + 1 != end()) 
             copy(pos + 1, finish, pos);
         --finish;
-        destory(finish);
+        destroy(finish);
         return pos;
     }
 
     iterator erase(const_iterator first, const_iterator last) {
         iterator tmp = copy(last, finish, first);
-        destory(tmp, finish);
+        destroy(tmp, finish);
         finish -= (last - first);
         return first;
     }
@@ -302,7 +302,7 @@ public:
 
     void pop_back() {
         --finish;
-        destory(finish);
+        destroy(finish);
     } 
 
     void resize(size_type new_sz) {
@@ -420,12 +420,12 @@ vector<T, Alloc>& vector<T, Alloc>::operator=(vector& x) {
     if(&x != this) {
         const size_type xlen = x.size();
         if(xlen > capacity()) {
-            destory_and_deallocate();
+            destroy_and_deallocate();
             start = allocate_and_copy(xlen, x.begin(), x.end());
             end_of_storage = start + xlen;
         } else if(size() >= xlen) {
             iterator tmp = copy(x.begin(), x.end(), start);
-            destory(tmp, finish);
+            destroy(tmp, finish);
         } else {
             copy(x.begin(), x.begin() + size(), start);
             uninitialized_copy(x.begin() + size(), x.end(), finish);
@@ -438,7 +438,7 @@ vector<T, Alloc>& vector<T, Alloc>::operator=(vector& x) {
 template<class T, class Alloc>
 vector<T, Alloc>& vector<T, Alloc>::operator=(vector<T, Alloc>&& x) {
     if(&x != this) {
-        destory_and_deallocate();
+        destroy_and_deallocate();
         start = x.start;
         finish = x.finish;
         end_of_storage = x.end_of_storage;
@@ -451,12 +451,12 @@ template<class T, class Alloc>
 vector<T, Alloc>& vector<T, Alloc>::operator=(std::initializer_list<T> ilist) {
     const size_type len = ilist.size();
     if(len > capacity()) {
-        destory_and_deallocate();
+        destroy_and_deallocate();
         start = allocate_and_copy(len, ilist.begin(), ilist.end());
         end_of_storage = start + len;
     } else if(size() >= len) {
         iterator tmp = copy(ilist.begin(), ilist.end(), start);
-        destory(tmp, finish);
+        destroy(tmp, finish);
     } else {
         copy(ilist.begin(), ilist.begin() + size(), start);
         uninitialized_copy(ilist.begin() + size(), ilist.end(), finish);
@@ -501,12 +501,12 @@ void vector<T, Alloc>::assign_aux(ForwardIt first, ForwardIt last,
     if(len > capacity()) {
         // in case first, last come from vector itself
         iterator tmp = allocate_and_copy(len, first, last);
-        destory_and_deallocate();
+        destroy_and_deallocate();
         start = tmp;
         end_of_storage = finish = start + len;
     } else if(size() >= len) {
         iterator new_finish = copy(first, last, start);
-        destory(new_finish, finish);
+        destroy(new_finish, finish);
         finish = new_finish;
     } else {
         ForwardIt mid = first;
@@ -535,10 +535,10 @@ void vector<T, Alloc>::insert_aux(iterator pos, const T& val) {
             ++new_finish;
             new_finish = uninitialized_copy(pos, finish, new_finish);
         } catch(std::exception&) {
-            destory(new_start, new_finish);
+            destroy(new_start, new_finish);
             alloc::deallocate(new_start, new_sz);
         }
-        destory_and_deallocate();
+        destroy_and_deallocate();
         start = new_start;
         finish = new_finish;
         end_of_storage = new_start + new_sz;
@@ -564,10 +564,10 @@ void vector<T, Alloc>::insert_aux(iterator pos, T&& val) {
             ++new_finish;
             new_finish = uninitialized_copy(pos, finish, new_finish);
         } catch(std::exception&) {
-            destory(new_start, new_finish);
+            destroy(new_start, new_finish);
             alloc::deallocate(new_start, new_sz);
         }
-        destory_and_deallocate();
+        destroy_and_deallocate();
         start = new_start;
         finish = new_finish;
         end_of_storage = new_start + new_sz;
@@ -606,10 +606,10 @@ void vector<T, Alloc>::fill_insert(iterator pos, size_type n, const T& val) {
             new_finish = uninitialized_fill_n(new_finish, n, x);
             new_finish = uninitialized_copy(pos, finish, new_finish);
         } catch(std::exception&) {
-            destory(new_start, new_finish);
+            destroy(new_start, new_finish);
             alloc::deallocate(new_start, new_sz);
         }
-        destory_and_deallocate();
+        destroy_and_deallocate();
         start = new_start;
         finish = new_finish;
         end_of_storage = new_start + new_sz;
@@ -661,10 +661,10 @@ void vector<T, Alloc>::range_insert(iterator pos, ForwardIt first,
             new_finish = uninitialized_copy(first, last, new_finish);
             new_finish = uninitialized_copy(pos, finish, new_finish);
         } catch(std::exception&) {
-            destory(new_start, new_finish);
+            destroy(new_start, new_finish);
             alloc::deallocate(new_start, new_sz);
         }
-        destory_and_deallocate();
+        destroy_and_deallocate();
         start = new_start;
         finish = new_finish;
         end_of_storage = new_start + new_sz;

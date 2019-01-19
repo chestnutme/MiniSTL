@@ -1,8 +1,7 @@
 #pragma once
 
 #include <cstddef>
-#include <istream>
-#include <ostream>
+#include <iostream>
 
 namespace MiniSTL {
     
@@ -105,15 +104,15 @@ public:
         return *this;
     }
 
-    front_insert_iterator& operator*() { return *this; }
-    front_insert_iterator& operator++() { return *this; }
-    front_insert_iterator& operator++(int) { return *this; }
+    insert_iterator& operator*() { return *this; }
+    insert_iterator& operator++() { return *this; }
+    insert_iterator& operator++(int) { return *this; }
 };
 
 template <class Container, class Iterator>
 inline insert_iterator<Container>
 inserter(Container& c, Iterator i) {
-    return insert_iterator<Container>(x,
+    return insert_iterator<Container>(c,
                         typename Container::iterator(i));
 }
 
@@ -160,7 +159,7 @@ public:
     }
 
     reverse_iterator operator++(int) {
-        reverse_iter tmp = *this;
+        reverse_iterator tmp = *this;
         --cur;
         return tmp;
     }
@@ -171,7 +170,7 @@ public:
     }
 
     reverse_iterator operator--(int) {
-        reverse_iter tmp = *this;
+        reverse_iterator tmp = *this;
         ++cur;
         return tmp;
     }
@@ -197,7 +196,7 @@ public:
     reference operator[](difference_type n) const {
         return *(*this + n);
     }
-}
+};
 
 template <class Iter>
 inline bool operator==(const reverse_iterator<Iter>& x,
@@ -266,9 +265,9 @@ class istream_iterator {
     
     // friend func declare use different type argument: each instance
     // of func is friend of according instance of iter
-    template <class T, class Distance>
-    inline bool operator==(const istream_iterator<T, Distance>&,
-                           const istream_iterator<T, Distance>&);
+    // template <class T1, class Distance1>
+    // inline bool operator==(const istream_iterator<T1, Distance1>&,
+    //                        const istream_iterator<T1, Distance1>&);
 
 protected:
     std::istream* istream;
@@ -276,10 +275,10 @@ protected:
     bool end_marker;
 
     void read() {
-        end_marker = (*stream) ？ true : false;
+        end_marker = (*istream) ? true : false;
         if(end_marker)
             istream >> value;
-        end_marker = (*stream) ？ true : false;
+        end_marker = (*istream) ? true : false;
     }
 
 public:
@@ -320,14 +319,14 @@ inline bool operator==(const istream_iterator<T, Distance>& x,
 template <class T, class Distance>
 inline bool operator!=(const istream_iterator<T, Distance>& x,
                         const istream_iterator<T, Distance>& y) {
-    return !(x == y)
+    return !(x == y);
 }
 
 
 template <class T>
 class ostream_iterator {
 protected:
-    std::ostream ostream;
+    std::ostream* ostream;
     const char* deli; // delimeter
 
 public:
@@ -339,7 +338,7 @@ public:
 
     // cout as default output stream
     ostream_iterator() : ostream(std::cout), deli(' ') {}
-    ostream_iterator(std::ostream& s) : ostream(s), deli('') {}
+    ostream_iterator(std::ostream& s) : ostream(s), deli(' ') {}
     ostream_iterator(std::ostream& s, const char* c)
         : ostream(s), deli(c) {}
     

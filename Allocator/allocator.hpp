@@ -145,16 +145,16 @@ struct allocAdaptor {
     using difference_type = ptrdiff_t;
 
     template <class U> struct rebind {
-        typedef allocator<U, Alloc_t> other;
+        typedef allocAdaptor<U, Alloc_t> other;
     };
 
-    allocator() noexcept {}
-    allocator(const allocator& a) noexcept
+    allocAdaptor() noexcept {}
+    allocAdaptor(const allocAdaptor& a) noexcept
         : underlying_alloc(a.underlying_alloc) {}
     template <class U> 
-    allocator(const allocator<U, Alloc_t>& a) noexcept
+    allocAdaptor(const allocAdaptor<U, Alloc_t>& a) noexcept
         : underlying_alloc(a.underlying_alloc) {}
-    ~allocator() noexcept {}
+    ~allocAdaptor() noexcept {}
 
     pointer address(reference x) const { return &x; }
     const_pointer address(const_reference x) const { return &x; }
@@ -190,7 +190,7 @@ class allocAdaptor<void, Alloc_t> {
 
     template <class U> 
     struct rebind {
-        typedef allocAdaptor<U> other;
+        typedef allocAdaptor<U, Alloc_t> other;
     };
 };
 
@@ -237,7 +237,7 @@ template <class T, class Alloc_t>
 struct alloc_traits
 {
     static const bool instanceless = false;
-    using allocator_type =  typename Alloc_t::rebind<T>::other 
+    using allocator_type = typename Alloc_t::template rebind<T>::other;
 };
 
 template <class T, class Alloc_t>
@@ -247,8 +247,8 @@ const bool alloc_traits<T, Alloc_t>::instanceless;
 template <class T, class U>
 struct alloc_traits<T, allocator<U>> {
     static const bool instanceless = true;
-    using alloc_type = simple_alloc<T, Alloc_t>;
-    using allocator_type = alocator<T>;
+    using alloc_type = simple_alloc<T, alloc_t>;
+    using allocator_type = allocator<T>;
 };
 
 

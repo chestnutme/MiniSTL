@@ -4,6 +4,7 @@
 #include <cstring> // memmove, memcmp
 #include "Iterator/iterator_base.hpp"
 #include "Traits/type_traits.hpp"
+#include "Util/pair.hpp"
 
 
 namespace MiniSTL {
@@ -70,14 +71,14 @@ template <class InputIt, class OutputIt>
 inline OutputIt __copy_aux(InputIt first, InputIt last,
                                OutputIt result, false_type) {
   return __copy(first, last, result,
-                iterator_category<InputIt>);
+                iterator_category<InputIt>());
 }
 
 template <class InputIt, class OutputIt>
 inline OutputIt __copy_aux(InputIt first, InputIt last,
                                OutputIt result, true_type) {
   return __copy(first, last, result,
-                iterator_category<InputIt>);
+                iterator_category<InputIt>());
 }
 
 // for raw pointer
@@ -123,28 +124,28 @@ __copy_trivial(const T* first, const T* last, T* result) {
 
 template <class BiIt1, class BiIt2>
 inline BiIt2 copy_backward(BiIt1 first, BiIt1 last, BiIt2 result) {
-    using trivial = has_trivial_assignment_operator<value_type<InputIt> >;
+    using trivial = has_trivial_assignment_operator<value_type<BiIt1> >;
     return __copy_backward_aux(first, last, result, trivial());
 }
 
 template <class BiIt1, class BiIt2>
 inline BiIt2 __copy_backward_aux(BiIt1 first, BiIt1 last, 
                                   BiIt2 result, true_type) {
-    return __copy_backward(first, second, result, 
-                            iterator_category<BiIt1>);
+    return __copy_backward(first, last, result, 
+                            iterator_category<BiIt1>());
 }
 
 template <class BiIt1, class BiIt2>
 inline BiIt2 __copy_backward_aux(BiIt1 first, BiIt1 last, 
                                   BiIt2 result, false_type) {
-    return __copy_backward(first, second, result,
-                            iterator_category<BiIt1>);
+    return __copy_backward(first, last, result,
+                            iterator_category<BiIt1>());
 }
 
 template <class T>
 inline T* __copy_backward_aux(const T* first, const T* last, 
                                 T* result, true_type) {
-    return __copy_backward_trivial(first, second, result);
+    return __copy_backward_trivial(first, last, result);
 }
 
 template <class T> 
@@ -181,7 +182,7 @@ template <class InputIt, class Size, class OutputIt>
 inline pair<InputIt, OutputIt>
 copy_n(InputIt first, Size count, OutputIt result) {
     return __copy_n(first, count, result,
-                        iterator_category<InputIt>);
+                        iterator_category<InputIt>());
 }
 
 template <class InputIt, class Size, class OutputIt>
