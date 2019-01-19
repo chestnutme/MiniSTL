@@ -18,7 +18,7 @@ inline void destroy(T* p) {
 
 template <class ForwardIterator>
 inline void destroy(ForwardIterator first, ForwardIterator last) {
-    __destroy_aux(first, last, has_trivial_destructor<value_type<ForwardIterator> >());
+    __destroy_aux(first, last, has_trivial_destructor_t<value_type_t<ForwardIterator> >());
 }
 
 template <class ForwardIterator>

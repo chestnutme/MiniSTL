@@ -61,7 +61,7 @@ public:
 
     template <class InputIt>
     vector(InputIt first, InputIt last) {
-        initialize_aux(first, last, is_integer<InputIt>());
+        initialize_aux(first, last, integral<InputIt>());
     }
     
     vector(vector&& other) noexcept {
@@ -116,7 +116,7 @@ protected:
 
     template <class InputIt>
     void initialize_aux(InputIt first, InputIt last, false_type) {
-        range_initialize(first, last, iterator_category<InputIt>());
+        range_initialize(first, last, iterator_category_t<InputIt>());
     }
 
     template <class InputIt>
@@ -142,7 +142,7 @@ public:
 
     template <class InputIt>
     void assign(InputIt first, InputIt last) {
-        assign_dispatch(first, last, is_integer<InputIt>());
+        assign_dispatch(first, last, integral<InputIt>());
     }
 
     void assign(std::initializer_list<T> ilist) {
@@ -160,7 +160,7 @@ protected:
 
 	template <class InputIt>
 	void assign_dispatch(InputIt first, InputIt last, false_type){
-		assign_aux(first,last, iterator_category<InputIt>());
+		assign_aux(first,last, iterator_category_t<InputIt>());
 	}
 
 	template <class InputIt>
@@ -340,7 +340,7 @@ public:
 
     template <class InputIt>
     iterator insert(const_iterator pos, InputIt first, InputIt last) {
-        insert_dispatch(pos, first, last, is_integer<InputIt>());
+        insert_dispatch(pos, first, last, integral<InputIt>());
     }
     
     iterator insert(const_iterator pos, T&& val) {
@@ -372,7 +372,7 @@ protected:
 
 	template <class InputIt>
 	void insert_dispatch(iterator pos, InputIt first, InputIt last, false_type) { 
-		range_insert(pos, first, last, iterator_category<InputIt>());
+		range_insert(pos, first, last, iterator_category_t<InputIt>());
 	}
 };
 

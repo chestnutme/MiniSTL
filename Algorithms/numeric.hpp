@@ -23,13 +23,13 @@ T inner_product(InputIt1 first1, InputIt1 last1,
 }
 
 template <class InputIt, class OutputIt, 
-          class BiOp = plus<value_type<InputIt>> >
+          class BiOp = plus<value_type_t<InputIt>> >
 OutputIt
 partial_sum(InputIt first, InputIt last, OutputIt result,
             BiOp op = BiOp()) {
     if(first == last)
         return result;
-    *result = value_type<InputIt>(0);
+    *result = value_type_t<InputIt>(0);
     while(first != last)
         *++result = op(*result, *first++);
     return result;
@@ -37,16 +37,16 @@ partial_sum(InputIt first, InputIt last, OutputIt result,
 
 
 template <class InputIt, class OutputIt, 
-          class BiOp = minus<value_type<InputIt>> >
+          class BiOp = minus<value_type_t<InputIt>> >
 OutputIt
 adjacent_difference(InputIt first, InputIt last, OutputIt result,
                     BiOp op = BiOp()) {
     if(first == last)
         return result;
     *result = *first;
-    value_type<InputIt> tmp = *first;
+    value_type_t<InputIt> tmp = *first;
     while(++first != last) {
-        value_type<InputIt> v = *first;
+        value_type_t<InputIt> v = *first;
         *++result = op(v, tmp);
         tmp = v;
     }

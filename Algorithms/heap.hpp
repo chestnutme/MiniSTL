@@ -7,11 +7,11 @@ namespace MiniSTL {
 
 // push a element in heap at [first, last - 1)
 // new element has been already positioned at last - 1
-template <class RandomIt, class Compare = less<value_type<RandomIt>> >
+template <class RandomIt, class Compare = less<value_type_t<RandomIt>> >
 void push_heap(RandomIt first, RandomIt last, 
                Compare comp = Compare()) {
-    using Distance = difference_type<RandomIt>;
-    using T = value_type<RandomIt>;
+    using Distance = difference_type_t<RandomIt>;
+    using T = value_type_t<RandomIt>;
     __push_heap(first, Distance(last - first - 1), Distance(0), T(*(last - 1), comp);
 }
 
@@ -31,17 +31,17 @@ void __push_heap(RandomIt first, Distance holeIdx, Distance topIdx,
 
 // pop the first element(max) from heap [first, last)
 // after return, max will be positioned at last - 1;
-template<class RandomIt, class Compare = less<value_type<RandomIt>> >
+template<class RandomIt, class Compare = less<value_type_t<RandomIt>> >
 void pop_heap(RandomIt first, RandomIt last, 
               Compare comp = Compare()) {
-    using T = value_type<RandomIt>;
+    using T = value_type_t<RandomIt>;
     __pop_heap(first, last - 1, last - 1, T(*(last - 1)), comp)
 }
 
 template <class RandomIt, class T, class Compare>
 void __pop_heap(RandomIt first, RandomIt last, RandomIt result,
                 T v, Compare comp = Compare()) {
-    using Distance = difference_type<RandomIt>;
+    using Distance = difference_type_t<RandomIt>;
     // max is positioned at last - 1
     // previous *(last - 1) is v;
     *result = *first; 
@@ -70,11 +70,11 @@ void adjust_heap(RandomIt first, Distance holeIdx, Distance len,
 }
 
 // turn [first, last) to a heap;
-template< class RandomIt, class Compare = less<value_type<RandomIt>> >
+template< class RandomIt, class Compare = less<value_type_t<RandomIt>> >
 void make_heap(RandomIt first, RandomIt last,
                Compare comp = Compare()) {
-    using Distance = difference_type<RandomIt>;
-    using T = value_type<RamdomIt>;
+    using Distance = difference_type_t<RandomIt>;
+    using T = value_type_t<RamdomIt>;
     if(last - first < 2) return;
     Distance len = last - first;
     // last node which has child
@@ -89,7 +89,7 @@ void make_heap(RandomIt first, RandomIt last,
 
 // sort with inc order
 // require [first, last) already a heap
-template <class RandomIt, class Compare = less<value_type<RandomIt>> >
+template <class RandomIt, class Compare = less<value_type_t<RandomIt>> >
 void sort_heap(RandomIt first, RandomIt last, 
              Compare comp = Compare()) {
     while(last - first > 1)
@@ -97,7 +97,7 @@ void sort_heap(RandomIt first, RandomIt last,
 }
 
 // check range [first, last - 1) is heap or not
-template< class RandomIt, class Compare = less<value_type<RandomIt>>>
+template< class RandomIt, class Compare = less<value_type_t<RandomIt>>>
 bool is_heap(RandomIt first, RandomIt last, 
              Compare comp = Compare()) {
     if(last - first < 2) 
@@ -109,10 +109,10 @@ bool is_heap(RandomIt first, RandomIt last,
 }
 
 // check range [first, last - 1) is heap or not
-template< class RandomIt, class Compare = less<value_type<RandomIt>>>
+template< class RandomIt, class Compare = less<value_type_t<RandomIt>>>
 RandomIt is_heap_until(RandomIt first, RandomIt last, 
                        Compare comp = Compare()) {
-    using Distance = difference_type<RandomIt>;
+    using Distance = difference_type_t<RandomIt>;
     if(last - first < 2) return first;
     Distance parent = Distance(0);
     Distance len = Distance(last - first);

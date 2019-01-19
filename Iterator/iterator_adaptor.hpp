@@ -124,11 +124,11 @@ protected:
     Iterator cur;
 
 public:
-    using iterator_category = iterator_category<Iterator>;
-    using value_type = value_type<Iterator>;
-    using difference_type = difference_type<Iterator>;
-    using pointer = pointer<Iterator>;
-    using reference = reference<Iterator>;
+    using iterator_category = iterator_category_t<Iterator>;
+    using value_type = value_type_t<Iterator>;
+    using difference_type = difference_type_t<Iterator>;
+    using pointer = pointer_t<Iterator>;
+    using reference = reference_t<Iterator>;
 
     using iterator_type = Iterator;
 
@@ -236,7 +236,7 @@ inline bool operator>=(const reverse_iterator<Iter>& x,
 
 // return distance between two iterator adaptors
 template <class Iter>
-inline difference_type<Iter>
+inline difference_type_t<Iter>
 operator-(const reverse_iterator<Iter>& x,
           const reverse_iterator<Iter>& y) {
     return y.base() - x.base();
@@ -245,7 +245,7 @@ operator-(const reverse_iterator<Iter>& x,
 // Returns the iterator it incremented by n.
 template <class Iter>
 inline reverse_iterator<Iter>
-operator+(difference_type<Iter> n,
+operator+(difference_type_t<Iter> n,
           const reverse_iterator<Iter>& x) {
     return x + n;
 }

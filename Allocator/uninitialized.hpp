@@ -12,7 +12,7 @@ namespace MiniSTL {
 // copy [first, last) into [res, res + last - first)
 template <class InputIter, class ForwardIter>
 inline ForwardIter uninitialized_copy(InputIter first, InputIter last, ForwardIter res) {
-    return __uninitialized_copy_aux(first, last, res, is_POD_type<value_type<ForwardIter> >());
+    return __uninitialized_copy_aux(first, last, res, is_POD_type_t<value_type_t<ForwardIter> >());
 }
 
 template <class InputIter, class ForwardIter>
@@ -44,7 +44,7 @@ template <class InputIter, class Size, class ForwardIter>
 inline pair<InputIter, ForwardIter> 
 uninitialized_copy_n(InputIter first, Size n, ForwardIter res) {
     return __uninitialized_copy_n_aux(first, n, res, 
-                iterator_category<ForwardIter>());
+                iterator_category_t<ForwardIter>());
 }
 
 template <class InputIter, class Size, class ForwardIter>
@@ -69,7 +69,7 @@ __uninitialized_copy_n_aux(RandomAccessIter first, Size n, ForwardIter res, rand
 // fill [first, last) with x
 template <class ForwardIter, class T>
 inline void uninitialized_fill(ForwardIter first, ForwardIter last, const T& x) {
-    __uninitialized_fill_aux(first, last, x, is_POD_type<value_type<ForwardIter> >());
+    __uninitialized_fill_aux(first, last, x, is_POD_type_t<value_type_t<ForwardIter> >());
 }
 
 template <class ForwardIter, class T>
@@ -88,7 +88,7 @@ inline void __uninitialized_fill_aux(ForwardIter first, ForwardIter last, const 
 // fill [first, first + n) with x
 template <class ForwardIter, class Size, class T>
 inline ForwardIter uninitialized_fill_n(ForwardIter first, Size n, const T& x) {
-    return __uninitialized_fill_n_aux(first, n, x, is_POD_type<value_type<ForwardIter> >());
+    return __uninitialized_fill_n_aux(first, n, x, is_POD_type_t<value_type_t<ForwardIter> >());
 }
 
 template <class ForwardIter, class Size, class T>

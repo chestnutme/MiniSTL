@@ -42,19 +42,19 @@ struct type_traits {
 
 //alias template
 template <class T>
-using has_trivial_default_constructor = typename type_traits<T>::has_trivial_copy_constructor;
+using has_trivial_default_constructor_t = typename type_traits<T>::has_trivial_copy_constructor;
 
 template <class T> 
-using has_trivial_copy_constructor = typename type_traits<T>::has_trivial_copy_constructor;
+using has_trivial_copy_constructor_t = typename type_traits<T>::has_trivial_copy_constructor;
 
 template <class T>
-using has_trivial_assignment_operator = typename type_traits<T>::has_trivial_assignment_operator;
+using has_trivial_assignment_operator_t = typename type_traits<T>::has_trivial_assignment_operator;
 
 template <class T>
-using has_trivial_destructor = typename type_traits<T>::has_trivial_destructor;
+using has_trivial_destructor_t = typename type_traits<T>::has_trivial_destructor;
 
 template <class T>
-using is_POD_type = typename type_traits<T>::is_POD_type;
+using is_POD_type_t = typename type_traits<T>::is_POD_type;
 
 
 
@@ -225,7 +225,6 @@ struct type_traits<T*> {
 //     using is_POD_type = true_type;
 // };
 
-
 template <class T>
 struct is_integer {
     using integral = false_type;
@@ -295,5 +294,10 @@ template <>
 struct is_integer<unsigned long long> {
     using integral = true_type;
 };
+
+
+// alias template
+template <class T>
+using integral = typename is_integer<T>::integral;
 
 } // MiniSTL

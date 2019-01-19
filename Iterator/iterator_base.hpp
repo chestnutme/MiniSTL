@@ -51,40 +51,40 @@ struct iterator_traits<const T*> {
 
 //alias template 
 template <class Iterator>
-using iterator_category = typename iterator_traits<Iterator>::iterator_category;
+using iterator_category_t = typename iterator_traits<Iterator>::iterator_category;
 
 template <class Iterator>
-using value_type = typename iterator_traits<Iterator>::value_type;
+using value_type_t = typename iterator_traits<Iterator>::value_type;
 
 template <class Iterator>
-using difference_type = typename iterator_traits<Iterator>::difference_type;
+using difference_type_t = typename iterator_traits<Iterator>::difference_type;
 
 template <class Iterator>
-using pointer = typename iterator_traits<Iterator>::pointer;
+using pointer_t = typename iterator_traits<Iterator>::pointer;
 
 template <class Iterator>
-using reference = typename iterator_traits<Iterator>::reference;
+using reference_t = typename iterator_traits<Iterator>::reference;
 
 
 // distance func
 template <class InputIterator>
-inline difference_type<InputIterator> 
+inline difference_type_t<InputIterator> 
 distance(InputIterator first, InputIterator last) {
-    return __distance(first, last, iterator_category<InputIterator>());
+    return __distance(first, last, iterator_category_t<InputIterator>());
 }
 
 template <class RandomAccessIterator>
-inline difference_type<RandomAccessIterator>
+inline difference_type_t<RandomAccessIterator>
 __distance(RandomAccessIterator first, RandomAccessIterator last,
             random_access_iterator_tag) {
     return last - first;
 }
 
 template <class InputIterator>
-inline difference_type<InputIterator>
+inline difference_type_t<InputIterator>
 __distance(InputIterator first, InputIterator last, 
             input_iterator_tag) {
-    difference_type<InputIterator> n = 0;
+    difference_type_t<InputIterator> n = 0;
     for(;first != last; ++n, ++first);
     return n;
 }
@@ -93,7 +93,7 @@ __distance(InputIterator first, InputIterator last,
 // advance func
 template <class InputIterator, class Distance>
 inline void advance(InputIterator& i, Distance n) {
-    __advance(i, n, iterator_category<InputIterator>());
+    __advance(i, n, iterator_category_t<InputIterator>());
 }
 
 template <class RandomAccessIterator, class Distance>
