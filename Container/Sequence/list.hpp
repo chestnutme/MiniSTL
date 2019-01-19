@@ -277,10 +277,7 @@ public:
  
     template <class... Args> 
     iterator emplace(const_iterator pos, Args&&... args) {
-        if(pos == end()) 
-            insert(end(), std::move(T(args...)))
-        else
-            new (static_cast<void*>(pos->data)) T(args...);
+        insert(end(), std::move(T(args...)))
     }
     
     // return iterator following the last removed element. If the iterator 
