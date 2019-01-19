@@ -128,8 +128,8 @@ public:
     using const_pointer = const T*;
     using iterator = list_iterator<T>;
     using const_iterator = const_list_iterator<T>;
-    using reverse_iterator = reverse_iterator<iterator>;
-    using const_reverse_iterator = reverse_iterator<const_iterator>;
+    using reverse_iterator = __reverse_iterator<iterator>;
+    using const_reverse_iterator = __reverse_iterator<const_iterator>;
     using allocator_type = Allocator;
 
 protected:

@@ -28,8 +28,8 @@ public:
     using const_pointer = const T*;
     using iterator = T*;    
     using const_iterator = const T*;
-    using reverse_iterator	= reverse_iterator<iterator>
-    using const_reverse_iterator = reverse_iterator<const_iterator>
+    using reverse_iterator	= __reverse_iterator<iterator>
+    using const_reverse_iterator = __reverse_iterator<const_iterator>
 
 protected:
     T* start;
