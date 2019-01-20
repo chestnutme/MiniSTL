@@ -170,7 +170,7 @@ char* default_alloc::chunk_alloc(size_t sz, int& nobjs) {
         res = start_free;
         start_free += total_bytes;
         return res;
-    } else if(total_bytes >= sz) {
+    } else if(bytes_left >= sz) {
         //case2: enough space for k(k<sz) objs
         nobjs = static_cast<int>(total_bytes / sz);
         res = start_free;
