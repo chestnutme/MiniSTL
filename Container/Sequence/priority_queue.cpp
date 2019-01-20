@@ -1,8 +1,11 @@
 #pragma once
 
 #include <initializer_list>
+#include <utility>
 #include "vector.hpp"
 #include "Function/function.hpp"
+#include "Algorithms/heap.hpp"
+
 
 namespace MiniSTL {
 
@@ -24,41 +27,90 @@ protected:
     Compare comp;
 
 public:
-    priority_queue(const Compare& x, const Container&);
-    explicit priority_queue(const Compare& x = Compare(), Container&& = Container());
+    // ctor
+    priority_queue(const Compare& x, const Container& y) : c(y), comp(x) {
+        make_heap(c.begin(), c.end(), comp);
+    }
+
+    explicit priority_queue(const Compare& x = Compare(), Container&& y = Container()) 
+        : c(std::forward(y)), comp(c) {
+        make_heap(c.begin, c.end(), comp);
+    }
+
     template <class InputIt>
     priority_queue(InputIt first, InputIt last,
-                       const Compare& x, const Container&);
+                   const Compare& x, const Container& y) : c(y), comp(x) { 
+        c.insert(first, last);
+        make_heap(c.begin, c.end(), comp);
+    }
+
     template <class InputIt>
     priority_queue(InputIt first, InputIt last,
-                   const Compare& x = Compare(), Container&& = Container());
-    template <class Alloc> explicit priority_queue(const Alloc&);
-    template <class Alloc> priority_queue(const Compare&, const Alloc&);
-    template <class Alloc> priority_queue(const Compare&,
-                                          const Container&, const Alloc&);
-    template <class Alloc> priority_queue(const Compare&,
-                                          Container&&, const Alloc&);
-    template <class Alloc> priority_queue(const priority_queue&, const Alloc&);
-    template <class Alloc> priority_queue(priority_queue&&, const Alloc&);
- 
+                   const Compare& x = Compare(), Container&& = Container()) 
+        : c(std::forward(y)), comp(c) {
+        c.insert(first, last);
+        make_heap(c.begin, c.end(), comp);
+    }
+
+    priority_queue() : c() {}
+    priority_queue(const priority_queue& q) : c(q.c), comp(q.comp) {}
+    priority_queue(priority_queue&& q)
+        : c(std::move(q.c)), comp(std::move(q.comp)) {}
+
+    // assign
+    priority_queue& operator=(const priority_queue& q) {
+        if(&q != this) {
+            c = q.c;
+            comp = q.comp;
+        }
+        return *this;
+    }
+    priority_queue& operator=(priority_queue&& q) {
+        if(&q != this) {
+            c = std::move(q.c);
+            comp = std::move(q.comp);
+        }
+        return *this;
+    }
+
+    // capacity
     bool empty() const {
         return c.empty();
     }
     size_type size() const {
         return c.size();
     }
+
+    // element access
     const_reference top() const {
         return c.front();
     }
-    void push(const value_type& x);
-    void push(value_type&& x);
-    template <class... Args> void emplace(Args&&... args);
-    void pop();
+
+    // modifiers:
+    void push(const value_type& x) {
+        c.push_back(x);
+        push_heap(c.begin(), c.end(), comp);
+    }
+    void push(value_type&& x) {
+        c.push_back(std::forward(x));
+        push_heap(c.begin(), c.end(), comp);
+    }
+
+    template <class... Args> 
+    void emplace(Args&&... args) {
+        c.emplace_back(args...);
+        push_heap(c.begin(), c.end(), comp);
+    }
+
+    void pop() {
+        pop_heap(c.begin(), c.end(), comp);
+        c.pop_back();
+    }
+
     void swap(priority_queue& q) noexcept( noexcept(swap(c, q.c))
                                         && noexcept(swap(comp, q.comp))) {
-        using std::swap;
-        swap(c, q.c);
-        swap(comp, q.comp);
+        MiniSTL::swap(c, q.c);
+        MinisTL::swap(comp, q.comp);
     }
 };
 
