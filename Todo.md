@@ -4,7 +4,7 @@
                          allocAdaptor which turn sgi-alloc to std allocator ;  
                          alloc_traits encapsulates the difference among sgi/std/allocAdaptor
     - [x] little_Alloc.hpp: a little exercising alloc learning from <STL source code analysis>, not used
-    - [x] construct.hpp: construct and destory
+    - [x] construct.hpp: construct and destroy
     - [x] unintialized.hpp: uninitialized_copy(), unitialized fill()
     - [x] smart_pointer.hpp: RAII, auto_ptr, not used
     - [x] memory.hpp: include above 
@@ -26,13 +26,13 @@
 
 - [ ] Container
     - [ ] Sequence
-        - [ ] vector.hpp
-        - [ ] list.hpp
+        - [x] vector.hpp
+        - [x] list.hpp
         - [ ] deque.hpp
         - [ ] stack.hpp
         - [ ] queue.hpp
-        - [ ] priority.hpp
-        - [ ] slist.hpp
+        - [ ] priority_queue.hpp
+        - [x] forward_list.hpp
     - [ ] Associative
         - [ ] rb_tree.hpp
         - [ ] bs_tree.hpp
