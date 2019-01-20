@@ -383,7 +383,7 @@ public:
     }
     // transfers the element pointed to by it from other into *this.
     void splice(const_iterator pos, list& x, const_iterator i) {
-        iterator j = i;
+        const_iterator j = i;
         ++j;
         // pos == i : cannot insert one before itself
         // pos == j : i already before pos
@@ -391,7 +391,7 @@ public:
         transfer(pos, i, j);
     }
     void splice(const_iterator pos, list&& x, const_iterator i) {
-        iterator j = i;
+        const_iterator j = i;
         ++j;
         if(pos == i || pos == j) return;
         transfer(pos, i, j);
@@ -408,7 +408,7 @@ public:
     }
 
 protected:
-    void transfer(iterator pos, iterator first, iterator last);
+    void transfer(const_iterator pos, const_iterator first, const_iterator last);
  
 public:
     void remove(const T& value);
@@ -604,7 +604,7 @@ template <class T, class Alloc>
 typename list<T, Alloc>::iterator
 list<T, Alloc>::fill_insert(const_iterator pos, size_type n, const T& val) {
     if(n == 0)
-        return iterator(pos);
+        return iterator(pos.node);
     iterator res = insert(pos, val);
     for(--n;n > 0;--n)
         insert(pos, val);
@@ -616,7 +616,7 @@ template <class InputIt>
 typename list<T, Alloc>::iterator
 list<T, Alloc>::insert_dispatch(const_iterator pos, InputIt first, InputIt last, false_type) {
     if(first == last)
-        return iterator(pos);
+        return iterator(pos.node);
     iterator res = insert(pos, *first);
     for(++first;first != last;++first)
         insert(pos, *first);
@@ -624,7 +624,9 @@ list<T, Alloc>::insert_dispatch(const_iterator pos, InputIt first, InputIt last,
 }
 
 template <class T, class Alloc>
-void list<T, Alloc>::transfer(iterator pos, iterator first, iterator last) {
+void list<T, Alloc>::transfer(const_iterator pos, 
+                              const_iterator first, 
+                              const_iterator last) {
     if (pos != last) {
         // Remove [first, last) from its old position.
         node_t* tmp = last.node->prev;
@@ -710,7 +712,7 @@ void list<T, Alloc>::merge(list& x) {
     iterator first1 = begin();
     iterator last1 = end();
     iterator first2 = x.begin();
-    iterator last2 = end();
+    iterator last2 = x.end();
     while(first1 != last1 && first2 != last2) {
         if(*first2 < *first1) {
             iterator next = first2;
