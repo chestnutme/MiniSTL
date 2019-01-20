@@ -870,4 +870,41 @@ void forward_list<T, Alloc>::reverse() noexcept {
 }
 
 
+// Specialization of insert_iterator so that insertions 
+// will be constant time instead of linear time.
+
+template <class T, class Alloc>
+class insert_iterator<forward_list<T, Alloc> > {
+protected:
+    using Container = forward_list<T, Alloc>;
+    using iterator_type = typename Container::iteartor;
+
+    Container* container;
+    iterator_type iter;
+
+public:
+    using container_type = Container;
+    using iterator_category = output_iterator_tag;
+    using value_type = void;
+    using difference_type = void;
+    using pointer = void;
+    using reference = void;
+
+    insert_iterator(Container& c, iterator_type i) : container(&c) {
+        iter = c.before_begin();
+        while(iter.node->next != i.node)
+            ++iter;
+    }
+
+    insert_iterator<Container>&
+    operator=(const typename Container::value_type& val) { 
+        iter = container->insert_after(iter, val);
+        return *this;
+    }
+
+    insert_iterator<Container>& operator*() { return *this; }
+    insert_iterator<Container>& operator++() { return *this; }
+    insert_iterator<Container>& operator++(int) { return *this; }
+};
+
 } // MiniSTL
