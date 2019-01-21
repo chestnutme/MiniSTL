@@ -191,9 +191,13 @@ public:
         insert(begin(), first, last);
     }
 
+    // ? move semantic for container:
+    // ? after move, x is empty initialized or x is null
     list(list&& x) {
-        dummy = x.dummy;
-        x.dummy = nullptr;
+        initialize();
+        swap(x);
+        // dummy = x.dummy;
+        // x.dummy = nullptr;
     }
 
     list(const list& x) {
