@@ -31,7 +31,7 @@
         - [ ] deque.hpp
         - [ ] stack.hpp
         - [ ] queue.hpp
-        - [ ] priority_queue.hpp
+        - [x] priority_queue.hpp
         - [x] forward_list.hpp
     - [ ] Associative
         - [ ] rb_tree.hpp
@@ -41,6 +41,11 @@
         - [ ] map_hpp
         - [ ] multiset.hpp
         - [ ] multimap.hpp
+        - [ ] hashtable.hpp
+        - [ ] hash_map.hpp
+        - [ ] hash_set.hpp
+        - [ ] hash_multimap.hpp
+        - [ ] hash_multiset.hpp
 
 - [x] Function:
     - [x] function_base.hpp
