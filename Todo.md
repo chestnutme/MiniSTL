@@ -25,12 +25,12 @@
     - [x] numeric.hpp 
 
 - [ ] Container
-    - [ ] Sequence
+    - [x] Sequence
         - [x] vector.hpp
         - [x] list.hpp
-        - [ ] deque.hpp
-        - [ ] stack.hpp
-        - [ ] queue.hpp
+        - [x] deque.hpp
+        - [x] stack.hpp
+        - [x] queue.hpp
         - [x] priority_queue.hpp
         - [x] forward_list.hpp
     - [ ] Associative
