@@ -17,10 +17,10 @@ protected:
     Container c;
 
 public:
-    explicit queue(const Container& c);
-    explicit queue(Container&& c = Container());
-    queue(const queue& q);
-    queue(queue&& q);
+    explicit queue(const Container& q) : c(q) {}
+    explicit queue(Container&& q = Container()) c(std::move(q)) {}
+    queue(const queue& q) : c(q.c) {}
+    queue(queue&& q) : c(std::move(q.c)) {}
  
     bool empty() const {
         return c.empty();
@@ -59,21 +59,35 @@ public:
 };
 
 template <class T, class Container>
-bool operator==(const queue<T, Container>& x,const queue<T, Container>& y);
+bool operator==(const queue<T, Container>& x,const queue<T, Container>& y) {
+    return x.c == y.c;
+}
 template <class T, class Container>
-bool operator!=(const queue<T, Container>& x,const queue<T, Container>& y);
+bool operator!=(const queue<T, Container>& x,const queue<T, Container>& y) {
+    return x.c != y.c;
+}
 
 template <class T, class Container>
-bool operator< (const queue<T, Container>& x,const queue<T, Container>& y);
+bool operator< (const queue<T, Container>& x,const queue<T, Container>& y) {
+    return x.c < y.c;
+}
 template <class T, class Container>
-bool operator> (const queue<T, Container>& x,const queue<T, Container>& y);
+bool operator> (const queue<T, Container>& x,const queue<T, Container>& y) {
+    return x.c > y.c;
+}
 template <class T, class Container>
-bool operator>=(const queue<T, Container>& x,const queue<T, Container>& y);
+bool operator>=(const queue<T, Container>& x,const queue<T, Container>& y) {
+    return x.c >= y.c;
+}
 template <class T, class Container>
-bool operator<=(const queue<T, Container>& x,const queue<T, Container>& y);
+bool operator<=(const queue<T, Container>& x,const queue<T, Container>& y) {
+    return x.c <= y.c;
+}
 
 template <class T, class Container>
 void swap(queue<T, Container>& x, queue<T, Container>& y)
-        noexcept(noexcept(x.swap(y)));
+        noexcept(noexcept(x.swap(y))) {
+    x.swap(y);
+}
 
 } // MiniSTL
