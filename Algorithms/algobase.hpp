@@ -6,6 +6,8 @@
 #include "Traits/type_traits.hpp"
 #include "Util/pair.hpp"
 
+#include <iostream>
+
 
 namespace MiniSTL {
 
@@ -59,40 +61,12 @@ inline const T& max(const T& x, const T& y, Compare comp) {
 //   2. If using random access iterators, then write the loop as
 //      a for loop with an explicit count n
 
-
-template <class InputIt, class OutputIt>
-inline OutputIt copy(InputIt first, InputIt last,
-                        OutputIt result) {
-    using trivial = has_trivial_assignment_operator_t<value_type_t<InputIt> >;
-    return __copy_aux(first, last, result, trivial());
-}
-
-template <class InputIt, class OutputIt>
-inline OutputIt __copy_aux(InputIt first, InputIt last,
-                               OutputIt result, false_type) {
-  return __copy(first, last, result,
-                iterator_category_t<InputIt>());
-}
-
-template <class InputIt, class OutputIt>
-inline OutputIt __copy_aux(InputIt first, InputIt last,
-                               OutputIt result, true_type) {
-  return __copy(first, last, result,
-                iterator_category_t<InputIt>());
-}
-
-// for raw pointer
-template <class T>
-inline T* __copy_aux(const T* first, const T* last, T* result,
-                        true_type) {
-  return __copy_trivial(first, last, result);
-}
-
 // for input iter, assign one by one, use first == last as end condition
 template <class InputIt, class OutputIt, class Distance>
 inline OutputIt __copy(InputIt first, InputIt last,
                         OutputIt result,
                         input_iterator_tag) {
+    std::cout << "copy input iter" << std::endl;
     for ( ; first != last; ++result, ++first)
         *result = *first;
     return result;
@@ -103,6 +77,7 @@ template <class RandomIt, class OutputIt, class Distance>
 inline OutputIt
 __copy(RandomIt first, RandomIt last, OutputIt result, 
         random_access_iterator_tag) {
+    std::cout << "copy random iter" << std::endl;
     for (Distance n = last - first; n > 0; --n) {
         *result = *first;
         ++first;
@@ -115,12 +90,69 @@ __copy(RandomIt first, RandomIt last, OutputIt result,
 template <class T>
 inline T*
 __copy_trivial(const T* first, const T* last, T* result) {
+    std::cout << "copy trivial" << std::endl;
     memmove(result, first, sizeof(T) * (last - first));
     return result + (last - first);
 }
+
+template <class InputIt, class OutputIt>
+inline OutputIt copy(InputIt first, InputIt last,
+                        OutputIt result) {
+    using trivial = has_trivial_assignment_operator_t<value_type_t<InputIt> >;
+    return __copy_aux(first, last, result, trivial());
+}
+
+template <class InputIt, class OutputIt>
+inline OutputIt __copy_aux(InputIt first, InputIt last,
+                               OutputIt result, false_type) {
+    return __copy(first, last, result,
+                  iterator_category_t<InputIt>());
+}
+
+template <class InputIt, class OutputIt>
+inline OutputIt __copy_aux(InputIt first, InputIt last,
+                               OutputIt result, true_type) {
+    return __copy(first, last, result,
+                  iterator_category_t<InputIt>());
+}
+
+// for raw pointer
+template <class T>
+inline T* __copy_aux(const T* first, const T* last, T* result,
+                        true_type) {
+    return __copy_trivial(first, last, result);
+}
+
+
 //--------------------------------------------------
 // copy_backward
 
+template <class T> 
+inline T* __copy_backward_trivial(const T* first, const T* last, 
+                                T* result){
+    const ptrdiff_t length = last - first;
+    memmove(result - length, first, sizeof(T) * length);
+    return result - length;
+}
+
+template <class BiIt1, class BiIt2, 
+          class Distance>
+inline BiIt2 __copy_backward(BiIt1 first, BiIt1 last, 
+                              BiIt2 result,
+                              bidirectional_iterator_tag) {
+    while (first != last)
+        *--result = *--last;
+    return result;
+}
+
+template <class RandomIt, class BiIt, class Distance>
+inline BiIt __copy_backward(RandomIt first, RandomIt last, 
+                             BiIt result,
+                             random_access_iterator_tag) {
+    for (Distance n = last - first; n > 0; --n)
+        *--result = *--last;
+    return result;
+}
 
 template <class BiIt1, class BiIt2>
 inline BiIt2 copy_backward(BiIt1 first, BiIt1 last, BiIt2 result) {
@@ -148,32 +180,6 @@ inline T* __copy_backward_aux(const T* first, const T* last,
     return __copy_backward_trivial(first, last, result);
 }
 
-template <class T> 
-inline T* __copy_backward_aux(const T* first, const T* last, 
-                                T* result){
-    const ptrdiff_t length = last - first;
-    memmove(result - length, first, sizeof(T) * length);
-    return result - length;
-}
-
-template <class BiIt1, class BiIt2, 
-          class Distance>
-inline BiIt2 __copy_backward(BiIt1 first, BiIt1 last, 
-                              BiIt2 result,
-                              bidirectional_iterator_tag) {
-    while (first != last)
-        *--result = *--last;
-    return result;
-}
-
-template <class RandomIt, class BiIt, class Distance>
-inline BiIt __copy_backward(RandomIt first, RandomIt last, 
-                             BiIt result,
-                             random_access_iterator_tag) {
-    for (Distance n = last - first; n > 0; --n)
-        *--result = *--last;
-    return result;
-}
 
 //--------------------------------------------------
 // copy_n 
