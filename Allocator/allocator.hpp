@@ -1,6 +1,7 @@
 #pragma once
 
 #include "alloc.hpp"
+#include <climits>
 
 /*
  * class relationship:
@@ -65,7 +66,7 @@ public:
     }
 
     size_type max_size() const noexcept { 
-        return SIZE_MAX / sizeof(T);
+        return UINT_MAX / sizeof(T);
     }
 
     void construct(pointer p, const T& v) { new(p) T(v); }
@@ -172,7 +173,7 @@ struct allocAdaptor {
     }
 
     size_type max_size() const noexcept {
-        return SIZE_MAX / sizeof(T); 
+        return UINT_MAX / sizeof(T); 
     }
 
     void construct(pointer p, const T& val) { new(p) T(val); }
