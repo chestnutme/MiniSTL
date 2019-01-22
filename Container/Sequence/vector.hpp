@@ -5,7 +5,7 @@
 #include "Algorithms/algobase.hpp"
 #include "Traits/type_traits.hpp"
 
-#include <cstdint> // for SIZE_MAX
+#include <climits> // for SIZE_MAX
 #include <initializer_list>
 #include <utility>
 #include <exception>
@@ -18,7 +18,7 @@ namespace MiniSTL {
 template <class T, class Allocator = simple_alloc<T>>
 class vector {
 public:
-    using value_type = T；
+    using value_type = T;
     using allocator_type = Allocator;
     using size_type	= size_t;
     using difference_type = ptrdiff_t;
@@ -28,8 +28,8 @@ public:
     using const_pointer = const T*;
     using iterator = T*;    
     using const_iterator = const T*;
-    using reverse_iterator	= __reverse_iterator<iterator>
-    using const_reverse_iterator = __reverse_iterator<const_iterator>
+    using reverse_iterator	= __reverse_iterator<iterator>;
+    using const_reverse_iterator = __reverse_iterator<const_iterator>;
 
 protected:
     T* start;
@@ -72,8 +72,8 @@ public:
     }
 
     vector(std::initializer_list<T> ilist) {
-        start = allocate_and_copy(other.begin(), other.end());
-        finish = end_of_storage = start + other.size();
+        start = allocate_and_copy(ilist.size(), ilist.begin(), ilist.end());
+        finish = end_of_storage = start + ilist.size();
     }
 
     ~vector() {
@@ -91,7 +91,7 @@ protected:
 
     void allocate_and_fill(size_type n, const T& val) {
         start = alloc::allocate(n);
-        end_of_storage = static_assert + n;
+        end_of_storage = start + static_cast<difference_type>(n);
         finish = uninitialized_fill_n(start, n, val);
     }
 
@@ -228,7 +228,7 @@ public:
     }
 
     size_type max_size() const noexcept {
-        return SIZE_MAX / sizeof(T);
+        return UINT_MAX / sizeof(T);
     }
 
     void reserve(size_type new_cap) {}
@@ -347,7 +347,7 @@ public:
         insert_aux(pos, std::forward(val));
     }
 
-    iterator insert(const_iterator pos, initializer_list<T> ilist) {
+    iterator insert(const_iterator pos, std::initializer_list<T> ilist) {
         range_insert(pos, ilist.begin(), ilist.end(), 
                         forward_iterator_tag());
     }
@@ -366,7 +366,7 @@ protected:
 	void range_insert(iterator pos, ForwardIt first, ForwardIt last, forward_iterator_tag);
 
 	template <class Integer>
-	void insert_dispatch(iterator pos, Integer n, Integer value, true_type) { 
+	void insert_dispatch(iterator pos, Integer n, Integer val, true_type) { 
 		fill_insert(pos, static_cast<size_type>(n), static_cast<T>(val));
 	}
 
@@ -436,7 +436,7 @@ vector<T, Alloc>& vector<T, Alloc>::operator=(vector& x) {
 }
 
 template<class T, class Alloc>
-vector<T, Alloc>& vector<T, Alloc>::operator=(vector<T, Alloc>&& x) {
+vector<T, Alloc>& vector<T, Alloc>::operator=(vector<T, Alloc>&& x) noexcept {
     if(&x != this) {
         destroy_and_deallocate();
         start = x.start;
@@ -461,7 +461,7 @@ vector<T, Alloc>& vector<T, Alloc>::operator=(std::initializer_list<T> ilist) {
         copy(ilist.begin(), ilist.begin() + size(), start);
         uninitialized_copy(ilist.begin() + size(), ilist.end(), finish);
     }
-    finish = start + xlen;
+    finish = start + len;
     return *this;
 }
 
@@ -521,13 +521,13 @@ void vector<T, Alloc>::insert_aux(iterator pos, const T& val) {
     if(finish != end_of_storage) {
         construct(finish, *(finish - 1));
         ++finish;
-        T x_copy = x; // prevent move assign?
+        T x_copy = val; // prevent move assign?
         copy_backward(pos, finish - 2, finish - 1);
         *pos = x_copy;
     } else {
         const size_type old_sz = size();
         const size_type new_sz = old_sz != 0 ? 2 * old_sz : 1;
-        iterator new_start = allocate(new_sz);
+        iterator new_start = alloc::allocate(new_sz);
         iterator new_finish = new_start;
         try {
             new_finish = uninitialized_copy(start, pos, new_start);
@@ -556,7 +556,7 @@ void vector<T, Alloc>::insert_aux(iterator pos, T&& val) {
     } else {
         const size_type old_sz = size();
         const size_type new_sz = old_sz != 0 ? 2 * old_sz : 1;
-        iterator new_start = allocate(new_sz);
+        iterator new_start = alloc::allocate(new_sz);
         iterator new_finish = new_start;
         try {
             new_finish = uninitialized_copy(start, pos, new_start);
@@ -581,7 +581,7 @@ void vector<T, Alloc>::fill_insert(iterator pos, size_type n, const T& val) {
     if(n != 0) {
         // case 1: enough space
         if(capacity() - size() >= n) {
-            T x_copy = x;
+            T x_copy = val;
             const size_type size_after = static_cast<size_type>(finish - pos);
             if(size_after > n) {
                 uninitialized_copy(finish - n, finish, finish);
@@ -596,26 +596,26 @@ void vector<T, Alloc>::fill_insert(iterator pos, size_type n, const T& val) {
                 finish += size_after;
                 fill(pos, old_finish, x_copy);
             }
+        } else {
+            // case2: expand
+            const size_type old_sz = size();
+            const size_type new_sz = old_sz + max(old_sz, n);
+            iterator new_start = alloc::allocate(new_sz);
+            iterator new_finish = new_start;
+            try {
+                new_finish = uninitialized_copy(start, pos, new_start);
+                new_finish = uninitialized_fill_n(new_finish, n, val);
+                new_finish = uninitialized_copy(pos, finish, new_finish);
+            } catch(std::exception&) {
+                destroy(new_start, new_finish);
+                alloc::deallocate(new_start, new_sz);
+                throw;
+            }
+            destroy_and_deallocate();
+            start = new_start;
+            finish = new_finish;
+            end_of_storage = new_start + new_sz;
         }
-    } else {
-        // case2: expand
-        const size_type old_sz = size();
-        const size_type new_sz = old_sz + max(old_sz, n);
-        iterator new_start = allocate(new_sz);
-        iterator new_finish = new_start;
-        try {
-            new_finish = uninitialized_copy(start, pos, new_start);
-            new_finish = uninitialized_fill_n(new_finish, n, x);
-            new_finish = uninitialized_copy(pos, finish, new_finish);
-        } catch(std::exception&) {
-            destroy(new_start, new_finish);
-            alloc::deallocate(new_start, new_sz);
-            throw;
-        }
-        destroy_and_deallocate();
-        start = new_start;
-        finish = new_finish;
-        end_of_storage = new_start + new_sz;
     }
 }
 
@@ -648,30 +648,30 @@ void vector<T, Alloc>::range_insert(iterator pos, ForwardIt first,
                 advance(mid, size_after);
                 uninitialized_copy(mid, last, finish);
                 finish += n - size_after;
-                uninitialized_copy(pos, old_finish, finish);
+                uninitialized_copy(pos, finish - (n - size_after), finish);
                 finish += size_after;
                 copy(first, mid, pos);
             }
+        } else {
+            // case2: expand
+            const size_type old_sz = size();
+            const size_type new_sz = old_sz + max(old_sz, n);
+            iterator new_start = alloc::allocate(new_sz);
+            iterator new_finish = new_start;
+            try {
+                new_finish = uninitialized_copy(start, pos, new_start);
+                new_finish = uninitialized_copy(first, last, new_finish);
+                new_finish = uninitialized_copy(pos, finish, new_finish);
+            } catch(std::exception&) {
+                destroy(new_start, new_finish);
+                alloc::deallocate(new_start, new_sz);
+                throw;
+            }
+            destroy_and_deallocate();
+            start = new_start;
+            finish = new_finish;
+            end_of_storage = new_start + new_sz;
         }
-    } else {
-        // case2: expand
-        const size_type old_sz = size();
-        const size_type new_sz = old_sz + max(old_sz, n);
-        iterator new_start = allocate(new_sz);
-        iterator new_finish = new_start;
-        try {
-            new_finish = uninitialized_copy(start, pos, new_start);
-            new_finish = uninitialized_copy(first, last, new_finish);
-            new_finish = uninitialized_copy(pos, finish, new_finish);
-        } catch(std::exception&) {
-            destroy(new_start, new_finish);
-            alloc::deallocate(new_start, new_sz);
-            throw;
-        }
-        destroy_and_deallocate();
-        start = new_start;
-        finish = new_finish;
-        end_of_storage = new_start + new_sz;
     }
 }
 
