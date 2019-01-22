@@ -17,10 +17,10 @@ protected:
     Container c;
  
 public:
-    explicit stack(const Container& c);
-    explicit stack(Container&& c = Container());
-    stack(const stack& s);
-    stack(stack&& s);
+    explicit stack(const Container& s) : c(s) {}
+    explicit stack(Container&& s = Container()) : c(std::move(s) {}
+    stack(const stack& s) : c(s.c) {}
+    stack(stack&& s) : c(std::move(s.c)) {}
  
     bool empty() const {
         return c.empty();
@@ -51,21 +51,32 @@ public:
     }
 };
 
-template <class T, class Container = deque<T> > class stack;
  
 template <class T, class Container>
-bool operator==(const stack<T, Container>& x,const stack<T, Container>& y);
+bool operator==(const stack<T, Container>& x,const stack<T, Container>& y) {
+    return x.c == y.c;
+}
 template <class T, class Container>
-bool operator!=(const stack<T, Container>& x,const stack<T, Container>& y);
+bool operator!=(const stack<T, Container>& x,const stack<T, Container>& y) {
+    return x.c != y.c;
+}
 
 template <class T, class Container>
-bool operator< (const stack<T, Container>& x,const stack<T, Container>& y);
+bool operator< (const stack<T, Container>& x,const stack<T, Container>& y) {
+    return x.c < y.c;
+}
 template <class T, class Container>
-bool operator> (const stack<T, Container>& x,const stack<T, Container>& y);
+bool operator> (const stack<T, Container>& x,const stack<T, Container>& y) {
+    return x.c > y.c;
+}
 template <class T, class Container>
-bool operator>=(const stack<T, Container>& x,const stack<T, Container>& y);
+bool operator>=(const stack<T, Container>& x,const stack<T, Container>& y) {
+    return x.c >= y.c;
+}
 template <class T, class Container>
-bool operator<=(const stack<T, Container>& x,const stack<T, Container>& y);
+bool operator<=(const stack<T, Container>& x,const stack<T, Container>& y) {
+    return x.c <= y.c;
+}
 
 template <class T, class Container>
 void swap(stack<T, Container>& x, stack<T, Container>& y)
