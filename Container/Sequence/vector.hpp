@@ -537,6 +537,7 @@ void vector<T, Alloc>::insert_aux(iterator pos, const T& val) {
         } catch(std::exception&) {
             destroy(new_start, new_finish);
             alloc::deallocate(new_start, new_sz);
+            throw;
         }
         destroy_and_deallocate();
         start = new_start;
@@ -566,6 +567,7 @@ void vector<T, Alloc>::insert_aux(iterator pos, T&& val) {
         } catch(std::exception&) {
             destroy(new_start, new_finish);
             alloc::deallocate(new_start, new_sz);
+            throw;
         }
         destroy_and_deallocate();
         start = new_start;
@@ -608,6 +610,7 @@ void vector<T, Alloc>::fill_insert(iterator pos, size_type n, const T& val) {
         } catch(std::exception&) {
             destroy(new_start, new_finish);
             alloc::deallocate(new_start, new_sz);
+            throw;
         }
         destroy_and_deallocate();
         start = new_start;
@@ -663,6 +666,7 @@ void vector<T, Alloc>::range_insert(iterator pos, ForwardIt first,
         } catch(std::exception&) {
             destroy(new_start, new_finish);
             alloc::deallocate(new_start, new_sz);
+            throw;
         }
         destroy_and_deallocate();
         start = new_start;

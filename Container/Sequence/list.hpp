@@ -153,6 +153,7 @@ protected:
             construct(&p->data, val);
         } catch(std::exception&) {
             put_node(p);
+            throw;
         }
         return p;
     } 
@@ -163,6 +164,7 @@ protected:
             new (&p->data) T(std::forward(val));
         } catch(std::exception&) {
             put_node(p);
+            throw;
         }
         return p;
     }
