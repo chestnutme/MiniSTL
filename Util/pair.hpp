@@ -12,14 +12,27 @@ struct pair {
     T2 second;
 
     pair() : first(T1()), second(T2()) {}
-    pair(const T1& t1, const T2& t2) : first(t1), first(t2) {}
+    pair(const T1& t1, const T2& t2) : first(t1), second(t2) {}
 
     template<class U1, class U2>
     pair(const pair<U1, U2>& p) : first(p.first), second(p.second) {}
 
-    pair& operator=(const pair&& other) {
-        this->first = std::move(other.first);
-        this->second = std::move(other.second);
+    pair(const pair& p) : first(p.first), second(p.second) {}
+    pair(pair&& p) : first(std::move(p.first)), second(std::move(p.second)) {}
+
+    pair& operator=(const pair& p) {
+        if(&p != this) {
+            first = p.first;
+            second = p.second;
+        }
+        return *this;
+    }
+
+    pair& operator=(pair&& p) {
+        if(&p != this) {
+            first = std::move(p.first);
+            second = std::move(p.second);
+        }
         return *this;
     }
 
