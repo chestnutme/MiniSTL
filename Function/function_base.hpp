@@ -104,7 +104,7 @@ struct equal_to : public binary_function<T, T, bool> {
 template <class T>
 struct not_equal_to : public binary_function<T, T, bool> {
     bool operator()(const T& x, const T& y) {
-        return x != y
+        return x != y;
     }
 };
 
@@ -152,7 +152,7 @@ struct logical_or : public binary_function<T, T, bool> {
 };
 
 template <class T>
-struct equal_to : public unary_function<T, bool> {
+struct logicla_not : public unary_function<T, bool> {
     bool operator()(const T& x) {
         return !x;
     }
@@ -162,7 +162,7 @@ struct equal_to : public unary_function<T, bool> {
 // not used int STL
 template <class T>
 struct identity : public unary_function<T, T> {
-    const T& operator(const T& x) const {
+    const T& operator()(const T& x) const {
         return x;
     }
 };
@@ -255,7 +255,7 @@ struct constant_void_fun {
 template <class Result, class Arg = Result>
 struct constant_unary_fun {
     using argument_type = Arg;
-    using result_type = result;
+    using result_type = Result;
 
     Result res;
 
