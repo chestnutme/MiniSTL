@@ -248,8 +248,6 @@ private:
         root() = nullptr;
         leftmost() = header;
         rightmost() = header;
-        #include <iostream>
-        std::cout << "loop" << std::endl;
     }
 
     void clear() {
