@@ -34,13 +34,13 @@
         - [x] priority_queue.hpp
         - [x] forward_list.hpp
     - [ ] Associative
-        - [ ] rb_tree.hpp
-        - [ ] bs_tree.hpp
+        - [x] rb_tree.hpp
+        - [x] bs_tree.hpp
         - [ ] avl_tree.hpp
-        - [ ] set.hpp
-        - [ ] map_hpp
-        - [ ] multiset.hpp
-        - [ ] multimap.hpp
+        - [x] set.hpp
+        - [x] map_hpp
+        - [x] multiset.hpp
+        - [x] multimap.hpp
         - [ ] hashtable.hpp
         - [ ] hash_map.hpp
         - [ ] hash_set.hpp
