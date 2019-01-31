@@ -32,7 +32,7 @@
 namespace MiniSTL {
 
 template <class Value>
-struct rb_tree_node {
+struct avl_tree_node {
     using height_t = int;
     using node_ptr_t = avl_tree_node*;
 
@@ -52,6 +52,16 @@ struct rb_tree_node {
         while(x->right)
             x = x->right;
         return x;
+    }
+
+    void updateHeight() {
+        height = 1 + max(left ? left->height : 0, 
+                         right ? right->height : 0);
+    }
+
+    bool Balanced() {
+        return !((left->height - right->height < 2) && 
+                 (right->height - left->height < 2));
     }
 };
 
@@ -264,7 +274,8 @@ public:
         if(x.root() == nullptr)
             empty_initialize();
         else {
-            header->color = avl_tree_red;
+            header = get_node();
+            header->height = -1;
             root() = copy(x.root(), header);
             leftmost() = node_t::minimum(root());
             rightmost() = node_t::maximum(root());
@@ -662,6 +673,8 @@ void avl_tree<Key, Value, KeyOfValue, Compare, Alloc>:: avl_tree_rotate_left(nod
         x->parent->right = y;
     y->left = x;
     x->parent = y;
+    x->updateHeight();
+    y->updateHeight();
 }
 
 template<class Key, class Value, class KeyOfValue, 
@@ -682,6 +695,8 @@ avl_tree_rotate_right(node_ptr_t x, node_ptr_t& root) {
         x->parent->right = y;
     y->right = x;
     x->parent = y;
+    x->updateHeight();
+    y->updateHeight();
 }
 
 // rebalance until root tree obey invariants
@@ -689,59 +704,38 @@ template<class Key, class Value, class KeyOfValue,
          class Compare, class Alloc>
 void avl_tree<Key, Value, KeyOfValue, Compare, Alloc>::
 avl_tree_rebalance(node_ptr_t x, node_ptr_t& root) {
-    x->color = avl_tree_red;
-    while(x != root && x->parent->color == avl_tree_red) {
-        if(x->parent == x->parent->parent->left) {
-            // father is grandfather's left
-            node_ptr_t y = x->parent->parent->right;
-            if(y && y->color == avl_tree_red) {
-                // case1 : uncle is red
-                // set father and uncle black, set grandfather red
-                // change x to grandparent for further adjust
-                // prevent the case: after adjust, grantparent
-                // and grantgrantparent are both red, the we
-                // must adjust upward
-                x->parent->color = avl_tree_black;
-                y->color = avl_tree_black;
-                x->parent->parent->color = avl_tree_red;
-                x = x->parent->parent;
-            } else {
-                // case 2 : uncle is black or null
+    while(x != root && x->parent->height == -1) {
+        if(x->parent->parent->Balanced()) {
+            // balanced, just need to adjust height upward
+            x->updateHeight();
+            x = x->parent;
+        } else {
+            // need rotate
+            if(x->parent == x->parent->parent->left) {
+                // case 1 : insert in left
                 if(x == x->parent->right) {
-                    // case 2.1: insert pos is inside
+                    // case 1.1: insert pos is inside
                     // first rorate left, turn to case2.2
                     x = x->parent;
                     avl_tree_rotate_left(x, root);
                 } 
-                // case 2.2: insert pos is outside
-                // set father black, set grandfather red;
+                // case 1.2: insert pos is outside
                 // then rotate right
-                x->parent->color = avl_tree_black;
-                x->parent->parent->color = avl_tree_red;
                 avl_tree_rotate_right(x->parent->parent, root);
-            }
-        } else {
-            // father is grandfather's right
-            node_ptr_t y = x->parent->parent->left;
-            if(y && y->color == avl_tree_red) {
-                // symmetrical case1:
-                x->parent->color = avl_tree_black;
-                y->color = avl_tree_black;
-                x->parent->parent->color = avl_tree_red;
-                x = x->parent->parent;
-            } else{
+            } else {
+                // father is grandfather's right
                 // symmetrical case2:
                 if(x == x->parent->left) {
                     x = x->parent;
                     avl_tree_rotate_right(x, root);
                 }
-                x->parent->color = avl_tree_black;
-                x->parent->parent->color = avl_tree_red;
                 avl_tree_rotate_left(x->parent->parent, root);
             }
+            // after rotate, sub-tree's height not change
+            // dont't need to update or adjust upward
+            break;
         }
     }
-    root->color = avl_tree_black;
 }
 
 
@@ -789,7 +783,7 @@ avl_tree_rebalance_for_erase(node_ptr_t z, node_ptr_t& root,
             z->parent->right = y;
 
         y->parent = z->parent;
-        swap(y->color, z->color);
+        swap(y->height, z->height);
         y = z; // y now points to node to be actually deleted
     } else { // y == z, z has no successor
         x_parent = y->parent;
@@ -818,74 +812,37 @@ avl_tree_rebalance_for_erase(node_ptr_t z, node_ptr_t& root,
     }
 
     // now y has replaced z, x has replaced previous y
-    // we must adjust x and x's parent
-    if(y->color != avl_tree_red) {
-        while(x != root && (x == nullptr || x->color == avl_tree_black)) {
-            if(x == x_parent->left) {
-                node_ptr_t w = x_parent->right;
-                if(w->color == avl_tree_red) {
-                    w->color = avl_tree_black;
-                    x_parent->color = avl_tree_red;
-                    avl_tree_rotate_left(x_parent, root);
-                    w = x->parent->right;
-                }
-
-                if((w->left == nullptr || 
-                    w->left->color == avl_tree_black) && 
-                   (w->right == nullptr || 
-                    w->right->color == avl_tree_black)) {
-                    w->color = avl_tree_red;
-                    x = x_parent;
-                    x_parent = x_parent->parent;    
-                } else {
-                    if(w->right == nullptr ||
-                       w->right->color == avl_tree_black) {
-                        w->color = avl_tree_red;
-                        avl_tree_rotate_right(w, root);
-                        w = x_parent->right;
-                    }
-                    w->color = x_parent->color;
-                    x_parent->color = avl_tree_black;
-                    if(w->right)
-                        w->right->color = avl_tree_black;
-                        avl_tree_rotate_left(x_parent, root);
-                    break;
-                }
-            } else { // x = x_parent's right
-                node_ptr_t w = x_parent->left;
-                if (w->color == avl_tree_red) {
-                    w->color = avl_tree_black;
-                    x_parent->color = avl_tree_red;
-                    avl_tree_rotate_right(x_parent,root);
-                    w = x_parent->left;
-                }
-
-                if ((w->right == 0 || 
-                     w->right->color == avl_tree_black) &&
-                    (w->left == 0 || 
-                     w->left->color == avl_tree_black)) {
-                    w->color = avl_tree_red;
-                    x = x_parent;
-                    x_parent = x_parent->parent;
-                } else {
-                    if (w->left == 0 || 
-                        w->left->color == avl_tree_black) {
-                        if (w->right)
-                            w->right->color = avl_tree_black;
-                        w->color = avl_tree_red;
-                        avl_tree_rotate_left(w, root);
-                        w = x_parent->left;
-                    }
-                    w->color = x_parent->color;
-                    x_parent->color = avl_tree_black;
-                    if (w->left) 
-                        w->left->color = avl_tree_black;
-                    avl_tree_rotate_right(x_parent, root);
-                    break;
+    // we must adjust x'previous parent and accessor
+    x = x_parent;
+    while(x != root && x->parent->height == -1) {
+        if(x->parent->parent->Balanced()) {
+            // balanced, just need to adjust height upward
+            x->udpateHeight();
+            x = x->parent;
+        } else {
+            // need rotate
+            if(x->parent == x->parent->parent->left) {
+                // case 1 : insert in left
+                if(x == x->parent->right) {
+                    // case 1.1: insert pos is inside
+                    // first rorate left, turn to case2.2
+                    x = x->parent;
+                    avl_tree_rotate_left(x, root);
                 } 
+                // case 1.2: insert pos is outside
+                // then rotate right
+                avl_tree_rotate_right(x->parent->parent, root);
+            } else {
+                // father is grandfather's right
+                // symmetrical case2:
+                if(x == x->parent->left) {
+                    x = x->parent;
+                    avl_tree_rotate_right(x, root);
+                }
+                avl_tree_rotate_left(x->parent->parent, root);
             }
-            if(x)
-                x->color = avl_tree_black;
+            // after rotate, we need adjust x's grandparents's accessors
+            x = x->parent;
         }
     }
     return y;
@@ -915,6 +872,7 @@ insert(node_ptr_t x, node_ptr_t y, const Value& val) {
     z->parent = y;
     z->left = nullptr;
     z->right = nullptr;
+    z->height = 1;
     avl_tree_rebalance(z, root());
     ++node_count;
     return iterator(z);
@@ -943,6 +901,7 @@ insert(node_ptr_t x, node_ptr_t y, Value&& val) {
     z->parent = y;
     z->left = nullptr;
     z->right = nullptr;
+    z->height = 1;
     avl_tree_rebalance(z, root());
     ++node_count;
     return iterator(z);
