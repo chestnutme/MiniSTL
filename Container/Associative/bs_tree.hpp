@@ -258,6 +258,7 @@ public:
         if(x.root() == nullptr)
             empty_initialize();
         else {
+            header = get_node();
             root() = copy(x.root(), header);
             leftmost() = node_t::minimum(root());
             rightmost() = node_t::maximum(root());
