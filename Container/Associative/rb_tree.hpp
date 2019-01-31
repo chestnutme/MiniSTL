@@ -272,6 +272,7 @@ public:
         if(x.root() == nullptr)
             empty_initialize();
         else {
+            header = get_node();
             header->color = rb_tree_red;
             root() = copy(x.root(), header);
             leftmost() = node_t::minimum(root());
