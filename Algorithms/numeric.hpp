@@ -83,7 +83,7 @@ inline T power(T x, Integer n , MonoidOp op = MonoidOp()) {
 template <class ForwardIt, class T>
 void iota(ForwardIt first, ForwardIt last, T init = T(0)) {
     while(first != last) 
-        *fisrt++ = init++;
+        *first++ = init++;
 }
 
 
