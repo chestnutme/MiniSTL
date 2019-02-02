@@ -90,7 +90,7 @@ OutputIt set_difference(InputIt1 first1, InputIt1 last1,
             ++first1;
             ++result;
         }
-        else if (comp(*first2, *first1)
+        else if(comp(*first2, *first1))
             ++first2;
         else {
             ++first1;
