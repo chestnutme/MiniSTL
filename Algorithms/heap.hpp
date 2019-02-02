@@ -12,7 +12,7 @@ void push_heap(RandomIt first, RandomIt last,
                Compare comp = Compare()) {
     using Distance = difference_type_t<RandomIt>;
     using T = value_type_t<RandomIt>;
-    __push_heap(first, Distance(last - first - 1), Distance(0), T(*(last - 1), comp);
+    __push_heap(first, Distance(last - first - 1), Distance(0), T(*(last - 1)), comp);
 }
 
 // push a element into heap 
@@ -35,7 +35,7 @@ template<class RandomIt, class Compare = less<value_type_t<RandomIt>> >
 void pop_heap(RandomIt first, RandomIt last, 
               Compare comp = Compare()) {
     using T = value_type_t<RandomIt>;
-    __pop_heap(first, last - 1, last - 1, T(*(last - 1)), comp)
+    __pop_heap(first, last - 1, last - 1, T(*(last - 1)), comp);
 }
 
 template <class RandomIt, class T, class Compare>
@@ -45,7 +45,7 @@ void __pop_heap(RandomIt first, RandomIt last, RandomIt result,
     // max is positioned at last - 1
     // previous *(last - 1) is v;
     *result = *first; 
-    adjust(first, Distance(0), Distance(last - first), v, comp)
+    adjust(first, Distance(0), Distance(last - first), v, comp);
 }
 
 // fill the holeIdx with max(left, right) until len - 1
@@ -74,7 +74,7 @@ template< class RandomIt, class Compare = less<value_type_t<RandomIt>> >
 void make_heap(RandomIt first, RandomIt last,
                Compare comp = Compare()) {
     using Distance = difference_type_t<RandomIt>;
-    using T = value_type_t<RamdomIt>;
+    using T = value_type_t<RandomIt>;
     if(last - first < 2) return;
     Distance len = last - first;
     // last node which has child
@@ -139,7 +139,7 @@ RandomIt is_heap_until(RandomIt first, RandomIt last,
     for(Distance child = 1;child < len;child++) {
         if(comp(*(first + parent), *(first + child)))
             return first + child - 1;
-        if((child & 1) == 0))
+        if((child & 1) == 0)
             ++parent;
     }
     return last;
