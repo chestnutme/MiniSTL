@@ -6,3 +6,4 @@
 #include "heap.hpp"
 #include "numeric.hpp"
 #include "sort.hpp"
+#include "algo_random.hpp"
