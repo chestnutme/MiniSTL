@@ -679,12 +679,32 @@ RandomIt __rotate(RandomIt first, RandomIt mid,
     return result;
 }
 
+
 // rotate return the pos of last element after rorate
 template <class ForwardIt>
 inline ForwardIt rotate(ForwardIt first, ForwardIt mid,
                         ForwardIt last) {
     return __rotate(first, mid, last,
                     iterator_category_t<ForwardIt>());
+}
+
+// rorate using buf if one of 2 ranges 's size < buf_size
+template <class BiIt1, class BiIt2,
+          class Distance>
+BiIt1 __rotate_adaptive(BiIt1 first, BiIt1 mid, BiIt1 last,
+                        Distance len1, Distance len2,
+                        BiIt2 buf, Distance buf_size) {
+    BiIt2 buf_end;
+    if(len1 > len2 && len2 <= buf_size) {
+        buf_end = copy(mid, last, buf);
+        copy_backward(first, mid, last);
+        return copy(buf, buf_end, first);
+    } else if(len1 <= buf_size) {
+        buf_end = copy(first, mid, buf);
+        copy(mid, last, first);
+        return copy_backward(buf, buf_end, last);
+    } else
+        return rotate(first, mid, last);
 }
 
 template <class ForwardIt, class OutputIt>
