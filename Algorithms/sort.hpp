@@ -537,5 +537,42 @@ inline void stable_sort(RandomIt first, RandomIt last,
 }
 
 
+// partial_sort, partial_sort_copy
+template <class RandomIt, 
+          class Compare = less<value_type_t<RandomIt>>>
+void partial_sort(RandomIt first, RandomIt mid,
+                    RandomIt last, Compare comp) {
+    make_heap(first, mid, comp);
+    for(RandomIt i = mid; i < last; ++i)
+        if(comp(*i, *first))
+            pop_heap(first, mid, i, *i, comp);
+    sort_heap(first, mid, comp);
+}
+
+template <class InputIt, class RandomIt, 
+          class Compare = less<value_type_t<InputIt>>>
+RandomIt partial_sort_copy(InputIt first, InputIt last,
+                             RandomIt result_first,
+                             RandomIt result_last,
+                             Compare comp = Compare()) {
+    if(result_first == result_last)
+        return result_last;
+    RandomIt result_real_last = result_first;
+    while(first != last && result_real_last != result_last) {
+        *result_real_last = *first;
+        ++result_real_last;
+        ++first;
+    }
+    make_heap(result_first, result_real_last, comp);
+    while(first != last) {
+        if(comp(*first, *result_first))
+            adjust_heap(result_first, Distance(0),
+                        Distance(result_real_last - result_first),
+                        *first, comp);
+        ++first;
+    }
+    sort_heap(result_first, result_real_last, comp);
+    return result_real_last;
+}
 
 } // MiniSTL
