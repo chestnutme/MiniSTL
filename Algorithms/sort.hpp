@@ -575,4 +575,27 @@ RandomIt partial_sort_copy(InputIt first, InputIt last,
     return result_real_last;
 }
 
+// nth_element() : after func, pos nth element is
+// order nth element
+template <class RandomIt,
+          class Compare = less<value_type_t<RandomIt>>>
+void __nth_element(RandomIt first, RandomIt nth,
+                   RandomIt last, 
+                   Compare comp = Compare()) {
+    while(last - first > 3) {
+        RandomIt cut =
+        __unguarded_partition(first, last,
+                              __median(*first,
+                                       *(first + (last - first)/2), 
+                                       *(last - 1),
+                                       comp)),
+                              comp);
+        if(cut <= nth)
+            first = cut;
+        else 
+            last = cut;
+    }
+    __insertion_sort(first, last, comp);
+}
+
 } // MiniSTL
