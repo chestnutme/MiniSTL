@@ -688,7 +688,7 @@ inline ForwardIt rotate(ForwardIt first, ForwardIt mid,
                     iterator_category_t<ForwardIt>());
 }
 
-// rorate using buf if one of 2 ranges 's size < buf_size
+// rorate using buf ifone of 2 ranges 's size < buf_size
 template <class BiIt1, class BiIt2,
           class Distance>
 BiIt1 __rotate_adaptive(BiIt1 first, BiIt1 mid, BiIt1 last,
@@ -713,6 +713,71 @@ OutputIt rotate_copy(ForwardIt first, ForwardIt mid,
     return copy(first, mid, copy(mid, last, result));
 }
 
+//------------------------
+// math
+
+// next_permutation and prev_permutation
+template <class BiIt, 
+		  class Compare = less<value_type_t<BiIt>>>
+bool next_permutation(BiIt first, BiIt last,
+                      Compare comp = Compare()) {
+    if(first == last)
+        return false;
+    BiIt i = first;
+    ++i;
+    if(i == last)
+        return false;
+    i = last;
+    --i;
+
+    for(;;) {
+        BiIt ii = i;
+        --i;
+        if(comp(*i, *ii)) {
+            BiIt j = last;
+            while (!comp(*i, *--j));
+            iter_swap(i, j);
+            reverse(ii, last);
+            return true;
+        }
+        if(i == first) {
+            reverse(first, last);
+            return false;
+        }
+    }
+}
+
+
+template <class BiIt,
+          class Compare = less<value_type_t<BiIt>>>
+bool prev_permutation(BiIt first, BiIt last,
+                      Compare comp = Compare()) {
+
+    if(first == last)
+        return false;
+    BiIt i = first;
+    ++i;
+    if(i == last)
+        return false;
+    i = last;
+    --i;
+
+    for(;;) {
+        BiIt ii = i;
+        --i;
+        if(comp(*ii, *i)) {
+            BiIt j = last;
+            while (!comp(*--j, *i));
+            iter_swap(i, j);
+            reverse(ii, last);
+            return true;
+        }
+        if(i == first) {
+            reverse(first, last);
+            return false;
+        }
+    }
+}
 
 //------------------------
 // other misc
@@ -815,5 +880,6 @@ OutputIt generate_n(OutputIt first, Size n, Generator gen) {
         *first = gen();
     return first;
 }
+
 
 } // MiniSTL
