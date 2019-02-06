@@ -21,8 +21,10 @@
     - [x] algobase.hpp
     - [x] heap.hpp
     - [x] algo_set.hpp
-    - [ ] sort.hpp
+    - [x] sort.hpp
     - [x] numeric.hpp 
+    - [x] algo_random.hpp 
+    - [x] algorithms.hpp 
 
 - [ ] Container
     - [x] Sequence
@@ -54,3 +56,4 @@
   
  - [ ] Util
     - [x] pair.hpp: just like std::pair 
+    - [x] tempbuf: temporary buffer for algorithms 
